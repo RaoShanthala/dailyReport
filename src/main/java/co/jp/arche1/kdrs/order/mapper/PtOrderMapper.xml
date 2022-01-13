@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.order.mapper.PtOrderMapper" >
+	<resultMap id="ptOrderMap" type="co.jp.arche1.kdrs.order.repository.PtOrderRepository" >
+		<id column="order_no" property="orderNo" jdbcType="INTEGER" />
+		<result column="priv_const_id" property="privConstId" jdbcType="INTEGER" />
+		<result column="order_code" property="orderCode" jdbcType="VARCHAR" />
+		<result column="order_title" property="orderTitle" jdbcType="VARCHAR" />
+		<result column="order_date" property="orderDate" jdbcType="TIMESTAMP" />
+		<result column="order_contents" property="orderContents" jdbcType="VARCHAR" />
+		<result column="order_cause" property="orderCause" jdbcType="VARCHAR" />
+		<result column="staff" property="staff" jdbcType="VARCHAR" />
+		<result column="staff_client" property="staffClient" jdbcType="VARCHAR" />
+		<result column="signature" property="signature" jdbcType="TINYINT" />
+		<result column="deleted" property="deleted" jdbcType="TINYINT" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="selectMany" resultMap="ptOrderMap" >
+		SELECT
+			priv_const_id, order_no, order_code, order_title,order_date, order_contents, order_cause,
+			staff,staff_client, signature, deleted, created_at, updated_at
+		FROM pt_order
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+	        <if test="orderNo != null">
+				AND order_no = #{orderNo}
+	        </if>
+           <if test="privConstId != null">
+				AND priv_const_id = #{privConstId}
+	        </if>
+            <if test="deleted != null and deleted != 2 ">
+				AND deleted = #{deleted}
+	        </if>
+    	</trim>
+        GROUP BY order_no;
+    </select>
+
+	<select  resultType="int"  id="selectOrderNo">
+		select COALESCE(MAX(order_no), 0) from pt_order
+		WHERE order_code = #{orderCode}
+		LOCK IN SHARE MODE
+	 </select>
+
+    <insert id="insert" parameterType="co.jp.arche1.kdrs.order.repository.PtOrderRepository" useGeneratedKeys="true" >
+		INSERT INTO
+			pt_order
+		(
+			priv_const_id,
+			order_code,
+			order_title,
+			order_date,
+			order_contents,
+			order_cause,
+			staff,
+			staff_client,
+			signature,
+			created_at,
+			updated_at
+		)
+		VALUES
+		(
+			 #{ptOrderRepository.privConstId}
+			,#{ptOrderRepository.orderCode}
+			,#{ptOrderRepository.orderTitle}
+			,#{ptOrderRepository.orderDate}
+			,#{ptOrderRepository.orderContents}
+			,#{ptOrderRepository.orderCause}
+			,#{ptOrderRepository.staff}
+			,#{ptOrderRepository.staffClient}
+			,#{ptOrderRepository.signature}
+			,#{ptOrderRepository.createdAt}
+			,#{ptOrderRepository.updatedAt}
+		)
+    </insert>
+
+    <update id ="updateAll" parameterType="java.util.List">
+      <foreach collection="list" item="item" separator=";" >
+		update pt_order
+		<set>
+		    updated_at = #{item.updatedAt}
+            <if test="item.orderTitle != null">
+               , order_title = #{item.orderTitle}
+            </if>
+            <if test="item.orderDate != null">
+               , order_date = #{item.orderDate}
+            </if>
+            <if test="item.orderContents != null">
+               , order_contents = #{item.orderContents}
+            </if>
+            <if test="item.orderCause != null">
+               , order_cause = #{item.orderCause}
+            </if>
+            <if test="item.staff != null">
+               , staff = #{item.staff}
+            </if>
+            <if test="item.staffClient != null">
+               , staff_client = #{item.staffClient}
+            </if>
+            <if test="item.signature != null">
+               , signature = #{item.signature}
+            </if>
+        </set>
+		  WHERE order_code = #{item.orderCode}
+      </foreach>
+    </update >
+
+    <update id ="deleteAll" parameterType="java.util.List">
+      <foreach collection="list" item="item" separator=";" >
+		update pt_order
+		<set>
+            updated_at = #{item.updatedAt},
+            deleted = #{item.deleted},
+        </set>
+		    WHERE order_code = #{item.orderCode}
+      </foreach>
+    </update >
+
+</mapper>

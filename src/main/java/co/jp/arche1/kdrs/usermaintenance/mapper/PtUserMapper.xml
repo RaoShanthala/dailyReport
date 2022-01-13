@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.usermaintenance.mapper.PtUserMapper" >
+	<resultMap id="ptuserMap" type="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" >
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="sei" property="sei" jdbcType="VARCHAR" />
+		<result column="mei" property="mei" jdbcType="VARCHAR" />
+		<result column="sei_kana" property="seiKana" jdbcType="VARCHAR" />
+		<result column="mei_kana" property="meikana" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<!-- select id="findAll" resultType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" -->
+	<select id="selectOne" resultMap="ptuserMap" >
+		SELECT
+			user_id,
+			start_date,
+			end_date,
+			login_user,
+			name,
+			password,
+			email,
+			updated_at
+		FROM
+			pt_user
+		WHERE
+			login_user = #{loginUser}
+	</select>
+
+	<select id="selectMany" resultMap="ptuserMap" >
+		SELECT
+			user_id,
+			mail as email,
+			password,
+			sei,
+			mei,
+			sei_kana,
+			mei_kana,
+			updated_at
+		FROM
+			pt_user
+		WHERE
+			mail = #{email} and deleted = 0
+	</select>
+
+	<select id="selecAll" resultMap="ptuserMap" >
+		SELECT
+			user_id,
+			start_date,
+			end_date,
+			login_user,
+			name,
+			email
+		FROM
+			pt_user
+	   <trim prefix="WHERE" prefixOverrides="AND | OR ">
+	        <if test="userId != null">
+				AND pt_user.user_id = #{userId}
+	        </if>
+	        <if test="loginUser != null">
+				AND pt_user.login_user = #{loginUser}
+	        </if>
+	        <if test="userName != null">
+				AND pt_user.user_name = #{userName}
+	        </if>
+    	</trim>
+	</select>
+
+	<!-- insert id="insert" parameterType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" useGeneratedKeys="true" keyProperty="user_id" -->
+	<insert id="insert" parameterType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" useGeneratedKeys="true" >
+		INSERT INTO
+			pt_user
+		(
+			start_date,
+			end_date,
+			login_user,
+			name,
+			password,
+			email
+		)
+		VALUES
+		(
+			#{startDate}
+			,#{endDate}
+			,#{loginUser}
+			,#{name}
+			,#{password}
+			,#{email}
+		)
+    </insert>
+
+	<!-- 引数が複数存在するので、 parameterTypeを使用しない。そのため、クラスならメンバー変数の前にインスタンス名が必要になる。
+	update id="update" parameterType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" useGeneratedKeys="true" keyProperty="user_id" -->
+	<update id="update" >
+		UPDATE
+			pt_user
+   		<set>
+			<if test="ptUserRepository.startDate != null">
+				start_date = #{ptUserRepository.startDate},
+	       	</if>
+			<if test="ptUserRepository.endDate != null">
+				end_date = #{ptUserRepository.endDate},
+	       	</if>
+			<if test="ptUserRepository.loginUser != null">
+				login_user = #{ptUserRepository.loginUser},
+	       	</if>
+			<if test="ptUserRepository.name != null">
+				name = #{ptUserRepository.name},
+	       	</if>
+			<if test="ptUserRepository.password != null">
+				password = #{ptUserRepository.password},
+	       	</if>
+			<if test="ptUserRepository.email != null">
+				email = #{ptUserRepository.email},
+	       	</if>
+   		</set>
+		WHERE
+			user_id = #{ptUserRepository.userId}
+			AND upd_datetime = #{updDatetimeWhenReading}
+	</update>
+
+    <delete id="delete">
+		DELETE FROM
+			pt_user
+		WHERE
+			user_id = #{userId}
+			AND upd_datetime = #{updDatetimeWhenReading}
+	</delete>
+
+</mapper>

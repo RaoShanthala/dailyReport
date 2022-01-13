@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.work.mapper.PvConstructionWorkUserMapper" >
+	<resultMap id="pvWorkMap" type="co.jp.arche1.kdrs.work.repository.PvConstructionWorkUserRepository" >
+        <id column="work_no" property="workNo" jdbcType="INTEGER" />
+		<result column="priv_const_id" property="privConstId" jdbcType="INTEGER" />
+		<result column="priv_const_code" property="privConstCode" jdbcType="VARCHAR" />
+		<result column="priv_const_name" property="privConstName" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="INTEGER" />
+		<result column="login_user" property="loginUser" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="order_no" property="orderNo" jdbcType="INTEGER" />
+		<result column="work_code" property="workCode" jdbcType="VARCHAR" />
+		<result column="work_date" property="workDate" jdbcType="TIMESTAMP" />
+		<result column="spot" property="spot" jdbcType="VARCHAR" />
+		<result column="outline" property="outline" jdbcType="VARCHAR" />
+		<result column="danger" property="danger" jdbcType="VARCHAR" />
+		<result column="safety" property="safety" jdbcType="VARCHAR" />
+		<result column="detail_1" property="detail1" jdbcType="VARCHAR" />
+		<result column="detail_2" property="detail2" jdbcType="VARCHAR" />
+		<result column="detail_3" property="detail3" jdbcType="VARCHAR" />
+		<result column="staff_client" property="staffClient" jdbcType="VARCHAR" />
+		<result column="leader" property="leader" jdbcType="VARCHAR" />
+		<result column="fire" property="fire" jdbcType="TINYINT" />
+		<result column="num_person" property="numPerson" jdbcType="VARCHAR" />
+		<result column="hours" property="hours" jdbcType="VARCHAR" />
+		<result column="deleted" property="deleted" jdbcType="TINYINT" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="selectMany" resultMap="pvWorkMap" >
+		SELECT
+			pconst.priv_const_id, pconst.priv_const_code, pconst.priv_const_name,
+			pconst.user_id, user.name as user_name, user.login_user,
+			work_no, order_no, work_code, work_date, spot, outline, danger,
+			safety, detail_1, detail_2, detail_3, staff_client, leader, fire,
+			num_person, hours, pt_work.deleted, pt_work.created_at, pt_work.updated_at
+		FROM pt_work
+		left join pt_privconst pconst on pconst.priv_const_id = pt_work.priv_const_id
+        left join pt_user user on pconst.user_id = user.user_id
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+             <if test="userId != null">
+				AND user.user_id = #{userId}
+	        </if>
+	        <if test="orderNo != null">
+				AND order_no = #{orderNo}
+	        </if>
+	        <if test="workNo != null">
+				AND work_no = #{workNo}
+	        </if>
+           <if test="privConstId != null">
+				AND pconst.priv_const_id = #{privConstId}
+	        </if>
+            <if test="deleted != null and deleted != 2 ">
+				AND pt_work.deleted = #{deleted}
+	        </if>
+    	</trim>
+        GROUP BY work_no;
+    </select>
+
+</mapper>

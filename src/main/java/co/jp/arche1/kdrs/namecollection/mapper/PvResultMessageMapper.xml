@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.namecollection.mapper.PvResultMessageMapper" >
+	<resultMap id="pvResultMessageMap" type="co.jp.arche1.kdrs.namecollection.repository.PvResultMessageRepository" >
+		<id column="priority" property="priority" jdbcType="TINYINT" />
+		<result column="dto_name_alpha" property="dtoNameAlpha" jdbcType="VARCHAR" />
+		<result column="dto_name_long" property="dtoNameLong" jdbcType="VARCHAR" />
+		<result column="msg_code" property="msgCode" jdbcType="VARCHAR" />
+		<result column="msg_name_alpha" property="msgNameAlpha" jdbcType="VARCHAR" />
+		<result column="msg_name_long" property="msgNameLong" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectOne" resultMap="pvResultMessageMap" >
+		SELECT
+			priority
+			,dto_name_alpha
+			,dto_name_long
+			,msg_code
+			,msg_name_alpha
+			,msg_name_long
+		FROM
+		(
+			SELECT '1' priority, dto.dto_name_alpha, dto.dto_name_long, rmdu.code_string msg_code, rmdu.name_alpha msg_name_alpha, rmdu.name_long msg_name_long
+			FROM
+				(
+					SELECT dto.code_numeric, dto.name_alpha dto_name_alpha, dto.name_long dto_name_long
+					FROM	pt_namecollection nsc
+					LEFT OUTER JOIN pt_namecollection dto
+						on	dto.code_section = nsc.code_numeric
+					WHERE 	nsc.code_section = 0
+						AND nsc.name_alpha = 'Dto'
+						AND dto.name_alpha = #{dtoNameParam}
+				) dto
+			inner JOIN
+				(
+					SELECT rmdu.code_numeric, rmdu.code_string, rmdu.name_alpha, rmdu.name_long
+					FROM	pt_namecollection nsc
+					LEFT OUTER JOIN pt_namecollection rmdu
+						on	rmdu.code_section = nsc.code_numeric
+					WHERE  	nsc.code_section = 0
+						AND nsc.name_alpha = 'ResultMessageDtoUnit'
+						AND rmdu.code_string = #{resultCodeParam}
+				) rmdu
+			ON dto.code_numeric = rmdu.code_numeric
+
+			union
+
+			SELECT '2' priority, '' dto_name_alpha, '' dto_name_long, rmdc.code_string msg_code, rmdc.name_alpha msg_name_short, rmdc.name_long msg_name_long
+			FROM	pt_namecollection nsc
+			LEFT OUTER JOIN pt_namecollection rmdc
+				on	rmdc.code_section = nsc.code_numeric
+			WHERE 	nsc.code_section = 0
+				AND nsc.name_alpha = 'ResultMessageDtoCommon'
+				AND rmdc.code_string = #{resultCodeParam}
+		) A ORDER BY priority LIMIT 0,1
+	</select>
+</mapper>

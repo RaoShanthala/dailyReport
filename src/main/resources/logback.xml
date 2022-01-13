@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE logback>
+<!-- Spring Boot1.3.0M2からlogbackの設定ファイル名に、「-spring」サフィックスを付けることが推奨されるようになりました。 -->
+<configuration>
+
+	<!-- include resource="org/springframework/boot/logging/logback/base.xml"/ でSTDOUTを出力しているのでコメントにしてdefaults.xmlを追加する -->
+	<!-- include resource="org/springframework/boot/logging/logback/base.xml"/ -->
+	<include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+	<property name="LOG_DIR" value="C:/logs" />
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<!-- DEBUG レベル 以上のエラーを出力する。ERROR > WARN > INFO > DEBUG(default) > TRACE -->
+			<level>DEBUG</level>
+		</filter>
+	    <encoder>
+	      	<!-- pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%5p) ${PID} - [%15thread] %.logger{35} -A- %msg %n</pattern -->
+	      	<!-- include resource="org/springframework/boot/logging/logback/base.xml"/ でSTDOUTを出力している内容と同じにする。 -->
+	      	<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(%5p) %magenta(${PID}) --- [%-15.15thread] %cyan(%-40.40logger) : %msg %n</pattern>
+	    </encoder>
+	</appender>
+
+	<!-- appender name="FILE" class="ch.qos.logback.core.FileAppender" -->
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+	<file>${LOG_DIR}/Console.log</file>
+	 	<filter class="ch.qos.logback.classic.filter.ThresholdFilter" >
+			<!-- DEBUG レベル 以上のエラーを出力する。ERROR > WARN > INFO > DEBUG > TRACE -->
+			<level>DEBUG</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+		    <fileNamePattern>${LOG_DIR}/Console.log.%d{yyyyMMdd}.gz</fileNamePattern>
+		    <maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<charset>UTF-8</charset>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID} [%thread] -B- %msg %n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- logger name="co.jp.arche1.kpms.actor" level="DEBUG" / -->
+
+	<logger name="org.hibernate" level="ERROR"/>
+	<logger name="org.springframework" level="INFO"/>
+	<logger name="org.thymeleaf" level="INFO"/>
+
+	<!-- HikariPoolロギングレベルをWARN以上にして、一定間隔で出力される接続ログを出力しないようにする -->
+	<!-- 誤り！ logger name="org.zaxxer.hikari" level="WARN"/ -->
+	<logger name="com.zaxxer.hikari" level="WARN"/>
+
+	<root>
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+
+	<!-- RestController JSONを含むデータを受け取ったときの内容とJSONを含むデータを返信するときにログを出力する設定 -->
+	<appender name="RESTCONTROLLER_LOGGING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+       	<!--  file>${LOG_PATH}/RestController.log</file> -->
+       	<file>${LOG_DIR}/RestController.log</file>
+  	<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+		<!-- WARN レベル 以上のエラーを出力する。ERROR > WARN > INFO > DEBUG > TRACE -->
+      	<level>WARN</level>
+    </filter>
+       <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+           <!-- fileNamePattern>${LOG_PATH}/RestController.log.%d{yyyyMMdd}.gz</fileNamePattern> -->
+           <fileNamePattern>${LOG_DIR}/RestController.log.%d{yyyyMMdd}.gz</fileNamePattern>
+           <maxHistory>30</maxHistory>
+       </rollingPolicy>
+       <encoder>
+           <!-- charset>UTF-8</charset><charset>SJIS</charset><charset>UTF-16</charset><charset>UNICODE</charset><charset>EUC</charset -->
+           <charset>UTF-8</charset>
+           <!--  pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID} [%t]%X{request_thread} %logger{45}:%L -C- %msg %n</pattern -->
+           <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID} [%t]%X{request_thread} -- %msg%n</pattern>
+       </encoder>
+   </appender>
+
+    <logger name="co.jp.arche1.kpms.common.LoggingRestController" additivity="false" level="DEBUG">
+        <appender-ref ref="RESTCONTROLLER_LOGGING_FILE"/>
+    </logger>
+
+	<!-- Service処理の呼び出し前後にログを出力する設定 -->
+    <appender name="SERVICE_LOGGING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--  file>${LOG_PATH}/Service.log</file> -->
+        <file>${LOG_DIR}/Service.log</file>
+	  	<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<!-- INFO レベル 以上のエラーを出力する。ERROR > WARN > INFO > DEBUG > TRACE -->
+	      	<level>INFO</level>
+	    </filter>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_DIR}/Service.log.%d{yyyyMMdd}.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <!-- pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID} [%t]%X{request_thread} %logger{45}:%L -D- %msg %n</pattern -->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID} [%t]%X{request_thread} -- %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- logger name="co.jp.arche1.kpms.common.ManagingService" additivity="false" level="INFO" -->
+    <logger name="ServiceLog" additivity="false" level="INFO">
+        <appender-ref ref="SERVICE_LOGGING_FILE"/>
+    </logger>
+
+</configuration>

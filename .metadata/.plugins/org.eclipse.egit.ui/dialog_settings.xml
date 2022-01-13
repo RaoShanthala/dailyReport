@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="org.eclipse.egit.ui.internal.clone.GitSelectWizardPageWizardSel" value="2"/>
+	<list key="RepositorySelectionPage.UsedUris">
+		<item value="https://github.com/RaoShanthala/dailyReport.git"/>
+		<item value="https://github.com/RaoShanthala/dailyreport.git"/>
+	</list>
+	<list key="EGit.KnownHosts">
+		<item value="git.eclipse.org"/>
+		<item value="github.com"/>
+		<item value="bitbucket.org"/>
+	</list>
+	<list key="CommitDialog.authorValues">
+		<item value="RaoShanthala &lt;93246490+RaoShanthala@users.noreply.github.com&gt;"/>
+	</list>
+	<list key="CommitDialog.committerValues">
+		<item value="RaoShanthala &lt;93246490+RaoShanthala@users.noreply.github.com&gt;"/>
+	</list>
+	<section name="GitImportWizard">
+		<item key="GitProjectsImportPage.STORE_NESTED_PROJECTS" value="true"/>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.staging.StagingView">
+		<item key="HORIZONTAL_SASH_FORM_WEIGHT" value="200,200"/>
+		<item key="STAGING_SASH_FORM_WEIGHT" value="200,200"/>
+		<item key="sortItemState" value="false"/>
+	</section>
+	<section name="GitCommitMessageComponent">
+	</section>
+	<section name="org.eclipse.egit.ui.internal.pull.PullResultDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="435"/>
+		<item key="DIALOG_Y_ORIGIN" value="180"/>
+		<item key="DIALOG_WIDTH" value="588"/>
+		<item key="DIALOG_HEIGHT" value="396"/>
+		<item key="DIALOG_FONT_NAME" value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont"/>
+	</section>
+	<section name="org.eclipse.egit.ui.internal.repository.CreateBranchPage$SourceSelectionDialog.dialogBounds">
+		<item key="DIALOG_X_ORIGIN" value="0"/>
+		<item key="DIALOG_Y_ORIGIN" value="-129"/>
+		<item key="DIALOG_WIDTH" value="590"/>
+		<item key="DIALOG_HEIGHT" value="467"/>
+		<item key="DIALOG_FONT_NAME" value="1|.AppleSystemUIFont|11.0|0|COCOA|1|.AppleSystemUIFont"/>
+	</section>
+</section>

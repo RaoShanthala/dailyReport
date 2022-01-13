@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.usermaintenance.mapper.PvUserCompanyMapper" >
+	<resultMap id="ptuserMap" type="co.jp.arche1.kdrs.usermaintenance.repository.PvUserCompanyRepository" >
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<id column="company_id" property="companyId" jdbcType="INTEGER" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="sei" property="sei" jdbcType="VARCHAR" />
+		<result column="mei" property="mei" jdbcType="VARCHAR" />
+		<result column="sei_kana" property="seiKana" jdbcType="VARCHAR" />
+		<result column="mei_kana" property="meikana" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="company_code" property="companyCode" jdbcType="VARCHAR" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+
+	</resultMap>
+
+
+	<select id="selectOne" resultMap="ptuserMap" >
+		SELECT
+			user.user_id,
+			user.mail as email,
+			user.password,
+			user.sei,
+			user.mei,
+			user.sei_kana,
+			user.mei_kana,
+			user.updated_at,
+			compuser.company_id,
+			compuser.status,
+			company.company_code
+		FROM
+			pt_user user
+			left join pt_company_user compuser on compuser.user_id = user.user_id
+			left join pt_company company on company.company_id = compuser.company_id
+		WHERE
+			mail = #{email} and user.deleted = 0
+			<if test="companyCode != null">
+		       AND company.company_code = #{companyCode}
+	        </if>
+	</select>
+
+
+</mapper>

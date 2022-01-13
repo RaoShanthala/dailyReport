@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.namecollection.mapper.PvNamecollectionMapper" >
+	<resultMap id="pvNamecollectionMap" type="co.jp.arche1.kdrs.namecollection.repository.PvNamecollectionRepository" >
+		<id column="code_id" property="codeId" jdbcType="INTEGER" />
+		<result column="code_section" property="codeSection" jdbcType="SMALLINT" />
+		<result column="code_type" property="codeType" jdbcType="VARCHAR" />
+		<result column="code_numeric" property="codeNumeric" jdbcType="SMALLINT" />
+		<result column="code_string" property="codeString" jdbcType="VARCHAR" />
+		<result column="name_alpha" property="nameAlpha" jdbcType="VARCHAR" />
+		<result column="name_short" property="nameShort" jdbcType="VARCHAR" />
+		<result column="name_long" property="nameLong" jdbcType="VARCHAR" />
+		<result column="cre_date" property="creDate" jdbcType="DATE" />
+		<result column="upd_datetime" property="updDatetime" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="selectMany" resultMap="pvNamecollectionMap" >
+		SELECT
+			nlt.code_id
+			,nlt.code_section
+			,nlt.code_type
+			,nlt.code_numeric
+			,nlt.code_string
+			,nlt.name_alpha
+			,nlt.name_short
+			,nlt.name_long
+			,nlt.cre_date
+			,nlt.upd_datetime
+		FROM pt_namecollection Slt
+		LEFT OUTER JOIN pt_namecollection nlt
+			on	nlt.code_section = Slt.code_numeric
+		WHERE  	Slt.code_section = 0
+			AND Slt.name_alpha = #{nameSectionParam}
+	</select>
+
+	<select id="selectOne" resultMap="pvNamecollectionMap" >
+		SELECT
+			nlt.code_id
+			,nlt.code_section
+			,nlt.code_numeric
+			,nlt.code_string
+			,nlt.name_alpha
+			,nlt.name_short
+			,nlt.name_long
+			,nlt.cre_date
+			,nlt.upd_datetime
+		FROM pt_namecollection Slt
+		LEFT OUTER JOIN pt_namecollection nlt
+			on	nlt.code_section = Slt.code_numeric
+		WHERE  	Slt.code_section = 0
+			AND Slt.name_alpha = #{nameSectionParam}
+        <if test="codeNumericParam != null">
+			AND nlt.code_numeric = #{codeNumericParam}
+		</if>
+        <if test="codeStringParam != null">
+			AND nlt.code_string = #{codeStringParam}
+		</if>
+	</select>
+<!--
+		SELECT dto.code_numeric dto_code_numeric, dto.code_section dto_code_section,
+					dto.code_string dto_code_string,
+					dto.name_alpha dto_name_alpha, dto.name_short dto_name_short,
+					title.code_numeric title_code_numeric, title.code_section title_code_section,
+					title.code_string title_code_string,
+					title.name_alpha title_name_alpha, title.name_short title_name_short
+-->
+	<select id="selectResponseDtTitel" resultMap="pvNamecollectionMap" >
+		SELECT title.code_id, title.code_section, title.code_numeric,
+				title.code_string, title.name_alpha, title.name_short, title.name_long,
+				title.cre_date, title.upd_datetime
+		FROM	pt_namecollection nsc
+		INNER JOIN pt_namecollection dto
+			ON	 dto.code_section = nsc.code_numeric
+		INNER JOIN pt_namecollection nsc2
+			ON  nsc2.code_section = 0
+			AND nsc2.name_alpha = #{dtoResClassName}
+		INNER JOIN pt_namecollection title
+			ON	 title.code_section = nsc2.code_numeric
+			AND title.code_numeric = dto.code_numeric
+		WHERE 	nsc.code_section = 0
+			AND nsc.name_alpha = 'Dto'
+			AND dto.name_alpha = #{dtoClassName}
+	        <if test="isSelect != null">
+				AND title.name_long = #{isSelect}
+			</if>
+		ORDER BY title.code_string;
+	</select>
+</mapper>

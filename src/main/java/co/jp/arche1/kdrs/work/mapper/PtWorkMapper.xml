@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.work.mapper.PtWorkMapper" >
+	<resultMap id="ptWorkMap" type="co.jp.arche1.kdrs.work.repository.PtWorkRepository" >
+        <id column="work_no" property="workNo" jdbcType="INTEGER" />
+		<result column="priv_const_id" property="privConstId" jdbcType="INTEGER" />
+		<result column="order_no" property="orderNo" jdbcType="INTEGER" />
+		<result column="work_code" property="workCode" jdbcType="VARCHAR" />
+		<result column="work_date" property="workDate" jdbcType="TIMESTAMP" />
+		<result column="spot" property="spot" jdbcType="VARCHAR" />
+		<result column="outline" property="outline" jdbcType="VARCHAR" />
+		<result column="danger" property="danger" jdbcType="VARCHAR" />
+		<result column="safety" property="safety" jdbcType="VARCHAR" />
+		<result column="detail_1" property="detail1" jdbcType="VARCHAR" />
+		<result column="detail_2" property="detail2" jdbcType="VARCHAR" />
+		<result column="detail_3" property="detail3" jdbcType="VARCHAR" />
+		<result column="staff_client" property="staffClient" jdbcType="VARCHAR" />
+		<result column="leader" property="leader" jdbcType="VARCHAR" />
+		<result column="fire" property="fire" jdbcType="TINYINT" />
+		<result column="num_person" property="numPerson" jdbcType="VARCHAR" />
+		<result column="hours" property="hours" jdbcType="VARCHAR" />
+		<result column="deleted" property="deleted" jdbcType="TINYINT" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="selectMany" resultMap="ptWorkMap" >
+		SELECT
+			priv_const_id, work_no, order_no, work_code, work_date, spot, outline, danger,
+			safety, detail_1, detail_2, detail_3, staff_client, leader, fire,
+			num_person, hours, deleted, created_at, updated_at
+		FROM pt_work
+        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+	        <if test="orderNo != null">
+				AND order_no = #{orderNo}
+	        </if>
+	        <if test="workNo != null">
+				AND work_no = #{workNo}
+	        </if>
+           <if test="privConstId != null">
+				AND priv_const_id = #{privConstId}
+	        </if>
+            <if test="deleted != null and deleted != 2 ">
+				AND deleted = #{deleted}
+	        </if>
+    	</trim>
+        GROUP BY work_no;
+    </select>
+
+    <insert id="insert" parameterType="co.jp.arche1.kdrs.work.repository.PtWorkRepository" useGeneratedKeys="true" >
+		INSERT INTO
+			pt_work
+		(
+			priv_const_id,
+			order_no,
+			work_code,
+			work_date,
+			spot,
+			outline,
+			danger,
+			safety,
+			detail_1,
+			detail_2,
+			detail_3,
+			staff_client,
+			leader,
+			fire,
+			num_person,
+			hours,
+			created_at,
+			updated_at
+		)
+		VALUES
+		(
+			 #{ptWorkRepository.privConstId}
+			,#{ptWorkRepository.orderNo}
+			,#{ptWorkRepository.workCode}
+			,#{ptWorkRepository.workDate}
+			,#{ptWorkRepository.spot}
+			,#{ptWorkRepository.outline}
+			,#{ptWorkRepository.danger}
+			,#{ptWorkRepository.safety}
+			,#{ptWorkRepository.detail1}
+			,#{ptWorkRepository.detail2}
+			,#{ptWorkRepository.detail3}
+			,#{ptWorkRepository.staffClient}
+			,#{ptWorkRepository.leader}
+			,#{ptWorkRepository.fire}
+			,#{ptWorkRepository.numPerson}
+			,#{ptWorkRepository.hours}
+			,#{ptWorkRepository.createdAt}
+			,#{ptWorkRepository.updatedAt}
+		)
+    </insert>
+
+    <update id ="updateAll" parameterType="java.util.List">
+      <foreach collection="list" item="item" separator=";" >
+		update pt_work
+		<set>
+		    updated_at = #{item.updatedAt}
+            <if test="item.orderNo!= null">
+               , order_no = #{item.orderNo}
+            </if>
+            <if test="item.workDate != null">
+               , work_date = #{item.workDate}
+            </if>
+            <if test="item.spot != null">
+               , spot = #{item.spot}
+            </if>
+            <if test="item.outline != null">
+               , outline = #{item.outline}
+            </if>
+            <if test="item.danger != null">
+               , danger = #{item.danger}
+            </if>
+            <if test="item.safety != null">
+               , safety = #{item.safety}
+            </if>
+            <if test="item.detail1 != null">
+               , detail_1 = #{item.detail1}
+            </if>
+            <if test="item.detail2 != null">
+               , detail_2 = #{item.detail2}
+            </if>
+            <if test="item.detail3 != null">
+               , detail_3 = #{item.detail3}
+            </if>
+            <if test="item.staffClient != null">
+               , staff_client = #{item.staffClient}
+            </if>
+            <if test="item.leader != null">
+               , leader = #{item.leader}
+            </if>
+            <if test="item.fire != null">
+               , fire = #{item.fire}
+            </if>
+            <if test="item.numPerson != null">
+               , num_person = #{item.numPerson}
+            </if>
+            <if test="item.hours != null">
+               , hours = #{item.hours}
+            </if>
+        </set>
+		  WHERE work_code = #{item.workCode}
+      </foreach>
+    </update >
+
+    <update id ="deleteAll" parameterType="java.util.List">
+      <foreach collection="list" item="item" separator=";" >
+		update pt_work
+		<set>
+            updated_at = #{item.updatedAt},
+            deleted = #{item.deleted},
+        </set>
+		    WHERE work_code = #{item.workCode}
+      </foreach>
+    </update >
+
+</mapper>
