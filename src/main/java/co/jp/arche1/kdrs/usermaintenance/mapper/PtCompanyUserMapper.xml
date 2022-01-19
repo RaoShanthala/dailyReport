@@ -13,19 +13,36 @@
 		SELECT
 			user_id
 			,company_id
-			,status
 			,updated_at
 		FROM
-			pt_comapny_user
+			pt_company_user
 		<trim prefix="WHERE" prefixOverrides="AND | OR ">
 	        <if test="userId != null">
-				AND pt_comapny_user.user_id = #{userId}
+				AND pt_company_user.user_id = #{userId}
 	        </if>
 	        <if test="companyId != null">
-				AND pt_comapny_user.company_id = #{companyId}
+				AND pt_company_user.company_id = #{companyId}
 	        </if>
     	</trim>
 	</select>
+
+	<insert id="insert" useGeneratedKeys="true" >
+		INSERT INTO
+			pt_company_user
+		(    user_id
+			, company_id
+			, created_at
+			, updated_at
+		)
+		VALUES
+		(
+			#{userId}
+			,#{companyId}
+			, CURRENT_TIMESTAMP
+			, CURRENT_TIMESTAMP
+
+		)
+    </insert>
 
 
 

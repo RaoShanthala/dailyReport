@@ -1,6 +1,5 @@
 package co.jp.arche1.kdrs.usermaintenance.controller;
 
-import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,22 +57,22 @@ public class UserMaintenanceController {
 
 	// ユーザ明細検索
 	@RequestMapping(value = "/UserMaintenance/ReferUserMany", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
-	public UserSearchManyDto referUserMany(@RequestParam(name = "loginUser", required = false) String loginUser,
-			@RequestParam(name = "name", required = false) String name,
-			@RequestParam(name = "roleId", required = false) Integer roleId,
-			@RequestParam(name = "roleLevel", required = false) Byte roleLevel,
-			@RequestParam(name = "targetDate", required = false) LocalDate targetDate) throws Exception {
+	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
+	public UserSearchManyDto referUserMany(@RequestParam(name = "companyId", required = true) Integer companyId,
+			@RequestParam(name = "sei", required = false) String sei,
+			@RequestParam(name = "mei", required = false) String mei,
+			@RequestParam(name = "status", required = false) Byte status,
+			@RequestParam(name = "deleted", required = false) Byte deleted) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		UserSearchManyDto userSearchManyDto = new UserSearchManyDto();
 		UserSearchManyDto.RequestHd regHd = userSearchManyDto.getReqHd();
 
-		regHd.setLoginUser(loginUser);
-		regHd.setName(name);
-		regHd.setRoleId(roleId);
-		regHd.setRoleLevel(roleLevel);
-		regHd.setTargetDate(targetDate);
+		regHd.setCompanyId(companyId);
+		regHd.setSei(sei);
+		regHd.setMei(mei);
+		regHd.setStatus(status);
+		regHd.setDeleted(deleted);
 
 		userService.searchMany(userSearchManyDto);
 
@@ -82,8 +81,8 @@ public class UserMaintenanceController {
 
 	// ユーザ１件検索
 	@RequestMapping(value = "/UserMaintenance/ReferUserOne", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
-	public UserSearchOneDto referUserOne(@RequestParam(name = "userId", required = true) Integer userId)
+	public UserSearchOneDto referUserOne(@RequestParam(name = "companyId", required = true) Integer companyId,
+			@RequestParam(name = "userId", required = true) Integer userId)
 			throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
@@ -91,6 +90,7 @@ public class UserMaintenanceController {
 		UserSearchOneDto.RequestHd reqHd = userSearchOneDto.getReqHd();
 
 		reqHd.setUserId(userId);
+		reqHd.setCompanyId(companyId);
 
 		userService.searchOne(userSearchOneDto);
 
@@ -99,7 +99,7 @@ public class UserMaintenanceController {
 
 	// ユーザ登録
 	@RequestMapping(value = "/UserMaintenance/RegistUer", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('PM_ADMIN')")
+	//@PreAuthorize("hasRole('PM_ADMIN')")
 	public UserInsertDto registUer(@RequestBody UserInsertDto userInsertDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
@@ -110,7 +110,6 @@ public class UserMaintenanceController {
 
 	// ユーザ更新
 	@RequestMapping(value = "/UserMaintenance/ModifyUer", method = RequestMethod.PUT)
-	@PreAuthorize("hasRole('PM_ADMIN')")
 	public UserUpdateDto modifyUer(@RequestBody UserUpdateDto userUpdateDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
@@ -121,7 +120,6 @@ public class UserMaintenanceController {
 
 	// ユーザ削除
 	@RequestMapping(value = "/UserMaintenance/RemoveUer", method = RequestMethod.DELETE)
-	@PreAuthorize("hasRole('PM_ADMIN')")
 	public UserDeleteDto removetUer(@RequestBody UserDeleteDto userDeleteDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 

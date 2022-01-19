@@ -10,7 +10,7 @@ import co.jp.arche1.kdrs.common.BaseDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class UserSearchOneDto extends BaseDto {
 	// static final long serialVersionUIDが必要
@@ -20,67 +20,63 @@ public class UserSearchOneDto extends BaseDto {
 	public UserSearchOneDto() {
 		reqHd = new RequestHd();
 		resHd = new ResponseHd();
-		resDt = new ArrayList<ResponseDt>();
 //		resDtTitle = new ResponseDtTitle();
 
-    	super.setTranId(this.getClass().getName());
-    }
+		super.setTranId(this.getClass().getName());
+	}
 
 	// プロパティ(メンバ変数)の宣言
 	private RequestHd reqHd;
 	private ResponseHd resHd;
-	private List<ResponseDt> resDt ;
-//	private ResponseHdTitle resHdTitle;
-//	private ResponseDtTitle resDtTitle;
+
 	private Object resHdTitle;
 	private Object resDtTitle;
 
 	@Data
 	public static class RequestHd implements Serializable {
-	    // static final long serialVersionUIDが必要
-	    private static final long serialVersionUID = 1L;
+		// static final long serialVersionUIDが必要
+		private static final long serialVersionUID = 1L;
 
-	    // 引数なしコンストラクタの定義
-	    public RequestHd() {}
+		// 引数なしコンストラクタの定義
+		public RequestHd() {
+		}
 
 		// プロパティ(メンバ変数)の宣言
 		private Integer userId;
+		private Integer companyId;
 	}
+
 	@Data
 	public static class ResponseHd implements Serializable {
-	    // static final long serialVersionUIDが必要
-	    private static final long serialVersionUID = 1L;
+		// static final long serialVersionUIDが必要
+		private static final long serialVersionUID = 1L;
 
-	    // 引数なしコンストラクタの定義
-	    public ResponseHd() {}
+		// 引数なしコンストラクタの定義
+		public ResponseHd() {
+		}
 
 		// プロパティ(メンバ変数)の宣言
-		private LocalDate startDate;
-		private LocalDate endDate;
-		private String loginUser;
-		private String name;
-		private String password;
+		private Integer userId;
+		private Integer companyId;
+		private Byte status;
+
 		private String email;
-		private LocalDateTime updDatetime;
+		private String sei;
+		private String mei;
+		private String seiKana;
+		private String meiKana;
+		private String password;
+		private String phone;
+		private String prefacture;
+		private String city;
+		private String streetNumber;
+		private String buildingName;
+		private byte deleted;
+		private byte authorityType;
+		private LocalDateTime createdAt;
+		private LocalDateTime updatedAt;
 	}
-	@Data
-	public static class ResponseDt implements Serializable {
-	    // static final long serialVersionUIDが必要
-	    private static final long serialVersionUID = 1L;
 
-	    // 引数なしコンストラクタの定義
-	    public ResponseDt() {}
-
-		// プロパティ(メンバ変数)の宣言
-		private Integer roleId;
-		private String roleName;
-		private Byte roleLevel;
-		private String roleLevelNameShort;
-		private LocalDate userRoleStartDate;
-		private LocalDate userRoleEndDate;
-		private LocalDateTime updDatetime;
-
-	}
 //	@Data
 //	public static class ResponseHdTitle implements Serializable {
 //	    // static final long serialVersionUIDが必要

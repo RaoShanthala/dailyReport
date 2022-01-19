@@ -9,16 +9,16 @@ public class JwtResponseDto {
 	private String username;
 	private String companyCode;
 	private Integer companyId;
-	private byte status;
+	//private byte status;
 	private List<String> authorities;
 
-	public JwtResponseDto(String accessToken, Integer id, String username, String companyCode,Integer companyId, byte status, List<String> authorities) {
+	public JwtResponseDto(String accessToken, Integer id, String username, String companyCode,Integer companyId,  List<String> authorities) {
 		this.token = accessToken;
 		this.id = id;
 		this.username = username;
 		this.companyCode = companyCode;
 		this.companyId = companyId;
-		this.status = status;
+		//this.status = status;
 		this.authorities = authorities;
 	}
 
@@ -70,13 +70,13 @@ public class JwtResponseDto {
 		this.companyId = companyId;
 	}
 
-	public byte getStatus() {
+	/*public byte getStatus() {
 		return status;
 	}
 
 	public void setStatus(byte status) {
 		this.status = status;
-	}
+	} */
 
 	public List<String> getAuthorities() {
 		return authorities;

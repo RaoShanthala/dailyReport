@@ -37,7 +37,6 @@ public class UserDeleteDto extends BaseDto {
 
 		// プロパティ(メンバ変数)の宣言
 		private Integer userId;
-		private LocalDateTime updDatetime;
 	}
 	@Data
 	public static class RequestDt implements Serializable {

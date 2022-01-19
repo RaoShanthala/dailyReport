@@ -8,6 +8,7 @@ public class PvCompanyUserAuthorityRepository {
 	private Integer userId;
 	private Integer companyId;
     private Byte authorityType;
+    private Byte status;
     private String name;
 
 }

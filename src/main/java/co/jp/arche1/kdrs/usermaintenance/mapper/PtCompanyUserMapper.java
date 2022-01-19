@@ -13,4 +13,7 @@ public interface PtCompanyUserMapper {
 	List<PtCompanyUserRepository> selectManyUserCompany(@Param("userId") Integer userId,
 			@Param("companyId") Integer companyId);
 
+	Integer insert(@Param("userId") Integer userId,
+			@Param("companyId") Integer companyId);
+
 }

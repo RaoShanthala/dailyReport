@@ -20,10 +20,14 @@ import co.jp.arche1.kdrs.usermaintenance.dto.UserSearchAllDto;
 import co.jp.arche1.kdrs.usermaintenance.dto.UserSearchManyDto;
 import co.jp.arche1.kdrs.usermaintenance.dto.UserSearchOneDto;
 import co.jp.arche1.kdrs.usermaintenance.dto.UserUpdateDto;
+import co.jp.arche1.kdrs.usermaintenance.mapper.PtCompanyUserAuthorityMapper;
+import co.jp.arche1.kdrs.usermaintenance.mapper.PtCompanyUserMapper;
 import co.jp.arche1.kdrs.usermaintenance.mapper.PtUserMapper;
+import co.jp.arche1.kdrs.usermaintenance.mapper.PvUserCompanyUserMapper;
 import co.jp.arche1.kdrs.usermaintenance.mapper.PvUserMonthOrderMapper;
 import co.jp.arche1.kdrs.usermaintenance.mapper.PvUserMonthReportMapper;
 import co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository;
+import co.jp.arche1.kdrs.usermaintenance.repository.PvUserCompanyUserRepository;
 import co.jp.arche1.kdrs.usermaintenance.repository.PvUserMonthOrderRepository;
 import co.jp.arche1.kdrs.usermaintenance.repository.PvUserMonthReportRepository;
 
@@ -36,44 +40,62 @@ public class UserService extends BaseService {
 	PtUserMapper ptUserMapper;
 
 	@Autowired
+	PtCompanyUserMapper ptCompanyUserMapper;
+
+	@Autowired
+	PtCompanyUserAuthorityMapper ptCompanyUserAuthorityMapper;
+
+	@Autowired
 	PvUserMonthReportMapper pvUserMonthReportMapper;
 
 	@Autowired
 	PvUserMonthOrderMapper pvUserMonthOrderMapper;
+
+	@Autowired
+	PvUserCompanyUserMapper pvUserCompanyUserMapper;
 
 	// ユーザ明細検索
 	// @Transactional(readOnly = true)
 	public void searchMany(UserSearchManyDto userSearchManyDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
-	/*	UserSearchManyDto.RequestHd reqHd = userSearchManyDto.getReqHd();
-		List<PvUserRoleRepository> listPvUserRoleRepository = pvUserRoleMapper.selectManyUser(reqHd.getLoginUser(),
-				reqHd.getName(), reqHd.getRoleId(), reqHd.getRoleLevel(), reqHd.getTargetDate());
+		UserSearchManyDto.RequestHd reqHd = userSearchManyDto.getReqHd();
+		List<PvUserCompanyUserRepository> listPvUserCompanyUserRepository = pvUserCompanyUserMapper.selectManyUsers(
+				reqHd.getCompanyId(), reqHd.getSei(), reqHd.getMei(), reqHd.getStatus(), reqHd.getDeleted());
 
 		List<UserSearchManyDto.ResponseDt> listResDt = userSearchManyDto.getResDt();
-		for (Iterator<PvUserRoleRepository> it = listPvUserRoleRepository.iterator(); it.hasNext();) {
-			PvUserRoleRepository pvUserRoleRepository = it.next();
+        int prevUserId = 0;
+		for (Iterator<PvUserCompanyUserRepository> it = listPvUserCompanyUserRepository.iterator(); it.hasNext();) {
+			PvUserCompanyUserRepository pvUserCompanyUserRepository = it.next();
 			// listtrnActorSearchResDt.add(convertTranActorSearchResDt(rdbActor));
 
 			UserSearchManyDto.ResponseDt resDt = new UserSearchManyDto.ResponseDt();
-			resDt.setUserId(pvUserRoleRepository.getUserId());
-			resDt.setStartDate(pvUserRoleRepository.getStartDate());
-			resDt.setEndDate(pvUserRoleRepository.getEndDate());
-			resDt.setLoginUser(pvUserRoleRepository.getLoginUser());
-			resDt.setName(pvUserRoleRepository.getName());
-			if (StringUtils.isNotEmpty(pvUserRoleRepository.getEmail())) {
-				resDt.setEmail(pvUserRoleRepository.getEmail());
+			if (prevUserId != 0 && prevUserId == pvUserCompanyUserRepository.getUserId()){
+				int indexOfLastElement = listResDt.size() - 1;
+				listResDt.remove(indexOfLastElement);
+				resDt.setAuthorityName("user and admin");
+			}else {
+				resDt.setAuthorityName(pvUserCompanyUserRepository.getAuthorityName());
 			}
-
-			if (pvUserRoleRepository.getRoleId() != null) {
-				// pt_user_role の role_id が存在すれば次の値も存在する。
-				resDt.setRoleId(pvUserRoleRepository.getRoleId());
-				resDt.setRoleName(pvUserRoleRepository.getRoleName());
-				resDt.setRoleLevel(pvUserRoleRepository.getRoleLevel());
-				resDt.setRoleLevelNameShort(pvUserRoleRepository.getRoleLevelNameShort());
-				resDt.setUserRoleStartDate(pvUserRoleRepository.getUserRoleStartDate());
-				resDt.setUserRoleEndDate(pvUserRoleRepository.getUserRoleEndDate());
+			prevUserId = pvUserCompanyUserRepository.getUserId();
+			resDt.setUserId(pvUserCompanyUserRepository.getUserId());
+			resDt.setCompanyId(pvUserCompanyUserRepository.getCompanyId());
+			resDt.setStatus(pvUserCompanyUserRepository.getStatus());
+			if (StringUtils.isNotEmpty(pvUserCompanyUserRepository.getEmail())) {
+				resDt.setEmail(pvUserCompanyUserRepository.getEmail());
 			}
+			resDt.setMei(pvUserCompanyUserRepository.getMei());
+			resDt.setSei(pvUserCompanyUserRepository.getSei());
+			resDt.setMeiKana(pvUserCompanyUserRepository.getMeiKana());
+			resDt.setSeiKana(pvUserCompanyUserRepository.getMeiKana());
+			resDt.setDeleted(pvUserCompanyUserRepository.getDeleted());
+			resDt.setCity(pvUserCompanyUserRepository.getCity());
+			resDt.setPhone(pvUserCompanyUserRepository.getPhone());
+			resDt.setPrefacture(pvUserCompanyUserRepository.getPrefacture());
+			resDt.setStreetNumber(pvUserCompanyUserRepository.getStreetNumber());
+			resDt.setBuildingName(pvUserCompanyUserRepository.getBuildingName());
+			resDt.setCreatedAt(pvUserCompanyUserRepository.getCreatedAt());
+			resDt.setUpdatedAt(pvUserCompanyUserRepository.getUpdatedAt());
 
 			listResDt.add(resDt);
 		}
@@ -84,7 +106,7 @@ public class UserService extends BaseService {
 			userSearchManyDto.setResultCode("000");
 		} else {
 			userSearchManyDto.setResultCode("001");
-		} */
+		}
 		return;
 	}
 
@@ -93,44 +115,36 @@ public class UserService extends BaseService {
 	public void searchOne(UserSearchOneDto userSearchOneDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
-	/*	UserSearchOneDto.RequestHd reqHd = userSearchOneDto.getReqHd();
-
-		List<PvUserRoleRepository> listPvUserRoleRepository = pvUserRoleMapper.selectOneUser(reqHd.getUserId(),
-				(String) null);
-		List<UserSearchOneDto.ResponseDt> listResDt = userSearchOneDto.getResDt();
-
-		for (Iterator<PvUserRoleRepository> it = listPvUserRoleRepository.iterator(); it.hasNext();) {
-			PvUserRoleRepository pvUserRoleRepository = it.next();
-
-			if (listResDt.isEmpty()) {
-				// 1件目のみ処理する
-				UserSearchOneDto.ResponseHd resHd = userSearchOneDto.getResHd();
-				resHd.setStartDate(pvUserRoleRepository.getStartDate());
-				resHd.setEndDate(pvUserRoleRepository.getEndDate());
-				resHd.setLoginUser(pvUserRoleRepository.getLoginUser());
-				resHd.setName(pvUserRoleRepository.getName());
-				resHd.setPassword(pvUserRoleRepository.getPassword());
-				if (StringUtils.isNotEmpty(pvUserRoleRepository.getEmail())) {
-					resHd.setEmail(pvUserRoleRepository.getEmail());
-				}
-				resHd.setUpdDatetime(pvUserRoleRepository.getUpdDatetime());
-			}
-			// 全件処理する
-			UserSearchOneDto.ResponseDt resDt = new UserSearchOneDto.ResponseDt();
-			if (pvUserRoleRepository.getRoleId() != null) {
-				// pt_user_role の role_id が存在すれば次の値も存在する。
-				resDt.setRoleId(pvUserRoleRepository.getRoleId());
-				resDt.setRoleName(pvUserRoleRepository.getRoleName());
-				resDt.setUpdDatetime(pvUserRoleRepository.getUserRoleUpdDatetime());
-				resDt.setRoleLevel(pvUserRoleRepository.getRoleLevel());
-				resDt.setRoleLevelNameShort(pvUserRoleRepository.getRoleLevelNameShort());
-				resDt.setUserRoleStartDate(pvUserRoleRepository.getUserRoleStartDate());
-				resDt.setUserRoleEndDate(pvUserRoleRepository.getUserRoleEndDate());
-				listResDt.add(resDt);
-			}
+		UserSearchOneDto.RequestHd reqHd = userSearchOneDto.getReqHd();
+		List<PvUserCompanyUserRepository> listPvUserCompanyUserRepository = pvUserCompanyUserMapper
+				.selectOneUser(reqHd.getCompanyId(), reqHd.getUserId());
+		UserSearchOneDto.ResponseHd resDt = userSearchOneDto.getResHd();
+		PvUserCompanyUserRepository pvUserCompanyUserRepository = listPvUserCompanyUserRepository.iterator().next();
+		if (listPvUserCompanyUserRepository.size() > 1) {
+			resDt.setAuthorityType((byte) 4); // both user and admin
+		} else {
+			resDt.setAuthorityType(pvUserCompanyUserRepository.getAuthorityType());
 		}
 
-		userSearchOneDto.setResultCode("000"); */
+		resDt.setUserId(pvUserCompanyUserRepository.getUserId());
+		resDt.setCompanyId(pvUserCompanyUserRepository.getCompanyId());
+		resDt.setStatus(pvUserCompanyUserRepository.getStatus());
+		if (StringUtils.isNotEmpty(pvUserCompanyUserRepository.getEmail())) {
+			resDt.setEmail(pvUserCompanyUserRepository.getEmail());
+		}
+		resDt.setMei(pvUserCompanyUserRepository.getMei());
+		resDt.setSei(pvUserCompanyUserRepository.getSei());
+		resDt.setMeiKana(pvUserCompanyUserRepository.getMeiKana());
+		resDt.setSeiKana(pvUserCompanyUserRepository.getMeiKana());
+		resDt.setPassword(pvUserCompanyUserRepository.getPassword());
+		// resDt.setDeleted(pvUserCompanyUserRepository.getDeleted());
+		resDt.setCity(pvUserCompanyUserRepository.getCity());
+		resDt.setPhone(pvUserCompanyUserRepository.getPhone());
+		resDt.setPrefacture(pvUserCompanyUserRepository.getPrefacture());
+		resDt.setStreetNumber(pvUserCompanyUserRepository.getStreetNumber());
+		resDt.setBuildingName(pvUserCompanyUserRepository.getBuildingName());
+
+		userSearchOneDto.setResultCode("000");
 
 		return;
 	}
@@ -144,43 +158,46 @@ public class UserService extends BaseService {
 
 		UserInsertDto.RequestHd reqHd = userInsertDto.getReqHd();
 		PtUserRepository ptUserRepository = new PtUserRepository();
-	/*	ptUserRepository.setStartDate(reqHd.getStartDate());
-		ptUserRepository.setEndDate(reqHd.getEndDate());
-		ptUserRepository.setLoginUser(reqHd.getLoginUser());
-		ptUserRepository.setName(reqHd.getName());
-		ptUserRepository.setStartDate(reqHd.getStartDate()); */
+		ptUserRepository.setSei(reqHd.getSei());
+		ptUserRepository.setMei(reqHd.getMei());
+		ptUserRepository.setSeiKana(reqHd.getSeiKana());
+		ptUserRepository.setMeiKana(reqHd.getMeiKana());
 		ptUserRepository.setPassword(reqHd.getPassword());
-		if (reqHd.getEmail() != null) {
-			ptUserRepository.setEmail(reqHd.getEmail());
-		}
+		ptUserRepository.setEmail(reqHd.getEmail());
+		ptUserRepository.setPhone(reqHd.getPhone());
+		ptUserRepository.setPrefacture(reqHd.getPrefacture());
+		ptUserRepository.setCity(reqHd.getCity());
+		ptUserRepository.setStreetNumber(reqHd.getStreetNumber());
+		ptUserRepository.setBuildingName(reqHd.getBuildingName());
+		ptUserRepository.setDeleted((byte) 0);
+
 		try {
 			// ユーザの登録
 			ptUserMapper.insert(ptUserRepository);
+
 		} catch (DuplicateKeyException ex) {
 			userInsertDto.setResultCode("002");
-			userInsertDto.setResultMessage("（操作：insert、テーブル名：pt_user、ログインユーザ：" + reqHd.getLoginUser() + "）");
+			userInsertDto.setResultMessage("（操作：insert、テーブル名：pt_user、メールアドレス：" + reqHd.getEmail() + "）");
 			return;
 		}
-
 		// 登録したユーザの検索
-		ptUserRepository = ptUserMapper.selectOne(reqHd.getLoginUser());
-
-	/*	List<UserInsertDto.RequestDt> listReqDt = userInsertDto.getReqDt();
-		PtUserRoleRepository ptUserRoleRepository = new PtUserRoleRepository();
-		for (Iterator<UserInsertDto.RequestDt> it = listReqDt.iterator(); it.hasNext();) {
-			UserInsertDto.RequestDt reqDt = it.next();
-
-			ptUserRoleRepository.setUserId(ptUserRepository.getUserId());
-
-			ptUserRoleRepository.setRoleId(reqDt.getRoleId());
-			ptUserRoleRepository.setRoleLevel(reqDt.getRoleLevel());
-
-			ptUserRoleRepository.setStartDate(reqDt.getUserRoleStartDate());
-			ptUserRoleRepository.setEndDate(reqDt.getUserRoleEndDate());
-			// ユーザ／業務の登録
-			ptUserRoleMapper.insert(ptUserRoleRepository);
-		}*/
-
+		ptUserRepository = ptUserMapper.selectOne(reqHd.getEmail());
+		if (reqHd.getAuthority() == 2 || reqHd.getAuthority() == 3) { // if admin or user
+			ptCompanyUserMapper.insert(ptUserRepository.getUserId(), reqHd.getCompanyId());
+			if (reqHd.getAuthority() == 3) { // in case of user
+				ptCompanyUserAuthorityMapper.insert(ptUserRepository.getUserId(), reqHd.getCompanyId(),
+						(byte)1, (byte)reqHd.getAuthority());
+			} else { // in case of admin
+				ptCompanyUserAuthorityMapper.insert(ptUserRepository.getUserId(), reqHd.getCompanyId(),
+						(byte)0, (byte)reqHd.getAuthority());
+     		}
+		} else { // if both admin and user
+			ptCompanyUserMapper.insert(ptUserRepository.getUserId(), reqHd.getCompanyId());
+			//for admin
+			ptCompanyUserAuthorityMapper.insert(ptUserRepository.getUserId(), reqHd.getCompanyId(),(byte)0, (byte) 2);
+			// for user
+			ptCompanyUserAuthorityMapper.insert(ptUserRepository.getUserId(), reqHd.getCompanyId(), (byte)1, (byte) 3);
+		}
 		userInsertDto.setResultCode("000");
 		return;
 	}
@@ -194,80 +211,83 @@ public class UserService extends BaseService {
 		PtUserRepository ptUserRepository = new PtUserRepository();
 
 		ptUserRepository.setUserId(reqHd.getUserId());
-	/*	ptUserRepository.setStartDate(reqHd.getStartDate());
-		ptUserRepository.setEndDate(reqHd.getEndDate());
-		ptUserRepository.setLoginUser(reqHd.getLoginUser());
-		ptUserRepository.setName(reqHd.getName());
-		ptUserRepository.setStartDate(reqHd.getStartDate()); */
-		ptUserRepository.setPassword(reqHd.getPassword());
-		if (reqHd.getEmail() != null) {
-			ptUserRepository.setEmail(reqHd.getEmail());
+
+		ptUserRepository.setSei(reqHd.getSei());
+		ptUserRepository.setMei(reqHd.getMei());
+		ptUserRepository.setSeiKana(reqHd.getSeiKana());
+		ptUserRepository.setMeiKana(reqHd.getMeiKana());
+		if (! reqHd.getPassword().trim().isEmpty()) {
+			ptUserRepository.setPassword(reqHd.getPassword());
 		}
+		ptUserRepository.setEmail(reqHd.getEmail());
+		ptUserRepository.setPhone(reqHd.getPhone());
+		ptUserRepository.setPrefacture(reqHd.getPrefacture());
+		ptUserRepository.setCity(reqHd.getCity());
+		ptUserRepository.setStreetNumber(reqHd.getStreetNumber());
+		ptUserRepository.setBuildingName(reqHd.getBuildingName());
 
 		// ユーザの更新
-		int cnt = ptUserMapper.update(ptUserRepository, reqHd.getUpdDatetime());
+		int cnt = ptUserMapper.update(ptUserRepository);
 		if (cnt == 0) {
 			throw new OptimisticLockException("（操作：update、テーブル名：pt_user）");
 		}
 
-	/*	List<UserUpdateDto.RequestDt> listReqDt = userUpdateDto.getReqDt();
-		PtUserRoleRepository ptUserRoleRepository = new PtUserRoleRepository();
-		for (Iterator<UserUpdateDto.RequestDt> it = listReqDt.iterator(); it.hasNext();) {
-			UserUpdateDto.RequestDt reqDt = it.next();
+		//First delete the authorities for the given userId and companyId
+		ptCompanyUserAuthorityMapper.delete(reqHd.getUserId(), reqHd.getCompanyId());
 
-			ptUserRoleRepository.setUserId(ptUserRepository.getUserId());
+		//then insert the authorities received from client
+		if (reqHd.getAuthority() == 2 || reqHd.getAuthority() == 3) { // if admin or user
+			if (reqHd.getAuthority() == 3) { // in case of user
+				ptCompanyUserAuthorityMapper.insert(reqHd.getUserId(), reqHd.getCompanyId(),
+						(byte)1, (byte)reqHd.getAuthority());
+			} else { // in case of admin
+				ptCompanyUserAuthorityMapper.insert(reqHd.getUserId(), reqHd.getCompanyId(),
+						(byte)0, (byte)reqHd.getAuthority());
+     		}
+		} else { // if both admin and user
+			//for admin
+			ptCompanyUserAuthorityMapper.insert(reqHd.getUserId(), reqHd.getCompanyId(),(byte)0, (byte) 2);
+			// for user
+			ptCompanyUserAuthorityMapper.insert(reqHd.getUserId(), reqHd.getCompanyId(), (byte)1, (byte) 3);
+		}
 
-			ptUserRoleRepository.setRoleId(reqDt.getRoleId());
-			ptUserRoleRepository.setRoleLevel(reqDt.getRoleLevel());
 
-			ptUserRoleRepository.setStartDate(reqDt.getUserRoleStartDate());
-			ptUserRoleRepository.setEndDate(reqDt.getUserRoleEndDate());
-
-			switch (reqDt.getAction().byteValue()) {
-			case 1: // ユーザ／業務の登録
-				cnt = ptUserRoleMapper.insert(ptUserRoleRepository);
-				break;
-			case 2: // ユーザ／業務の更新
-					cnt = ptUserRoleMapper.update(ptUserRoleRepository, reqDt.getUpdDatetime());
-				if (cnt == 0) {
-					throw new OptimisticLockException("（操作：update、テーブル名：pt_user）");
-				}
-				break;
-			case 3: // ユーザ／業務の削除
-				cnt = ptUserRoleMapper.delete(reqHd.getUserId(), reqDt.getRoleId(), reqDt.getUpdDatetime());
-				if (cnt == 0) {
-					throw new OptimisticLockException("（操作：delete、テーブル名：pt_user）");
-				}
-				break;
-			}
-		} */
+		/*
+		 * List<UserUpdateDto.RequestDt> listReqDt = userUpdateDto.getReqDt();
+		 * PtUserRoleRepository ptUserRoleRepository = new PtUserRoleRepository(); for
+		 * (Iterator<UserUpdateDto.RequestDt> it = listReqDt.iterator(); it.hasNext();)
+		 * { UserUpdateDto.RequestDt reqDt = it.next();
+		 *
+		 * ptUserRoleRepository.setUserId(ptUserRepository.getUserId());
+		 *
+		 * ptUserRoleRepository.setRoleId(reqDt.getRoleId());
+		 * ptUserRoleRepository.setRoleLevel(reqDt.getRoleLevel());
+		 *
+		 * ptUserRoleRepository.setStartDate(reqDt.getUserRoleStartDate());
+		 * ptUserRoleRepository.setEndDate(reqDt.getUserRoleEndDate());
+		 *
+		 * switch (reqDt.getAction().byteValue()) { case 1: // ユーザ／業務の登録 cnt =
+		 * ptUserRoleMapper.insert(ptUserRoleRepository); break; case 2: // ユーザ／業務の更新
+		 * cnt = ptUserRoleMapper.update(ptUserRoleRepository, reqDt.getUpdDatetime());
+		 * if (cnt == 0) { throw new
+		 * OptimisticLockException("（操作：update、テーブル名：pt_user）"); } break; case 3: //
+		 * ユーザ／業務の削除 cnt = ptUserRoleMapper.delete(reqHd.getUserId(), reqDt.getRoleId(),
+		 * reqDt.getUpdDatetime()); if (cnt == 0) { throw new
+		 * OptimisticLockException("（操作：delete、テーブル名：pt_user）"); } break; } }
+		 */
 		userUpdateDto.setResultCode("000");
 		return;
 	}
 
-	// ユーザ、ユーザ／業務の削除
-	// @Transactional(readOnly = false, rollbackFor = Exception.class, propagation =
-	// Propagation.REQUIRES_NEW)
-	// @Transactional(readOnly = false, rollbackFor = Exception.class)
+	// ユーザ (論理削除)
 	public void delete(UserDeleteDto userDeleteDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		UserDeleteDto.RequestHd reqHd = userDeleteDto.getReqHd();
-		// ユーザの削除
-		int cnt = ptUserMapper.delete(reqHd.getUserId(), reqHd.getUpdDatetime());
+		// ユーザの削除(
+		int cnt = ptUserMapper.deleteUpdate(reqHd.getUserId(), (byte) 1);
 		if (cnt == 0) {
 			throw new OptimisticLockException("delete pt_user");
-		}
-
-		List<UserDeleteDto.RequestDt> listReqDt = userDeleteDto.getReqDt();
-		for (Iterator<UserDeleteDto.RequestDt> it = listReqDt.iterator(); it.hasNext();) {
-			UserDeleteDto.RequestDt reqDt = it.next();
-			// ユーザ／業務の削除
-		/*R	cnt = ptUserRoleMapper.delete(userDeleteDto.getReqHd().getUserId(), reqDt.getRoleId(),
-					reqDt.getUpdDatetime()); */
-			if (cnt == 0) {
-				throw new OptimisticLockException("delete pt_user_role");
-			}
 		}
 		userDeleteDto.setResultCode("000");
 		return;
@@ -287,10 +307,12 @@ public class UserService extends BaseService {
 			UserSearchAllDto.ResponseDt resDt = new UserSearchAllDto.ResponseDt();
 			resDt.setUserId(ptUserRepository.getUserId());
 			resDt.setEmail(ptUserRepository.getEmail());
-	/*		resDt.setStartDate(ptUserRepository.getStartDate());
-			resDt.setEndDate(ptUserRepository.getEndDate());
-			resDt.setLoginUser(ptUserRepository.getLoginUser());
-			resDt.setUserName(ptUserRepository.getName()); */
+			/*
+			 * resDt.setStartDate(ptUserRepository.getStartDate());
+			 * resDt.setEndDate(ptUserRepository.getEndDate());
+			 * resDt.setLoginUser(ptUserRepository.getLoginUser());
+			 * resDt.setUserName(ptUserRepository.getName());
+			 */
 
 			listResDt.add(resDt);
 		}

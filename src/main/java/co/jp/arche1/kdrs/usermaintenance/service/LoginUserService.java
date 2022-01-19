@@ -59,7 +59,7 @@ public class LoginUserService implements UserDetailsService {
 		String password= null;
 		String companyCode = null;
 		Integer companyId = null;
-		Byte status = null;
+		//Byte status = null;
 		List<GrantedAuthority> authorities = new ArrayList<>();
 
 	//	List<PvLoginUserRoleRepository> listPvUserRoleRepository = pvLoginUserRoleMapper.selectMany(userName);
@@ -77,7 +77,7 @@ public class LoginUserService implements UserDetailsService {
 				email = pvUserCompanyRepository.getEmail();
 				password = pvUserCompanyRepository.getPassword();
 				companyCode = pvUserCompanyRepository.getCompanyCode();
-				status = pvUserCompanyRepository.getStatus();
+				//status = pvUserCompanyRepository.getStatus();
 				companyId = pvUserCompanyRepository.getCompanyId();
 			/*	sei = pvUserCompanyRepository.getSei();
 				mei = pvUserCompanyRepository.getMei();
@@ -103,7 +103,7 @@ public class LoginUserService implements UserDetailsService {
 			loginEmail = email;
 		}
 
-		return ImplementsUserDetails.build(userId, loginEmail, password, companyCode,companyId,status,authorities);
+		return ImplementsUserDetails.build(userId, loginEmail, password, companyCode,companyId,authorities);
 	}
 
 	private String getCert(HttpServletRequest request) {

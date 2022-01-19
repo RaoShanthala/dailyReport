@@ -11,13 +11,10 @@ public class PtUserRepository {
 
 	private Integer userId;
 
-//	private LocalDate startDate;
-//	private LocalDate endDate;
-
 	private String mei;
 	private String sei;
-	private String meiKana;
 	private String seiKana;
+	private String meiKana;
 	private String password;
 	private String email;
 
@@ -30,7 +27,6 @@ public class PtUserRepository {
 
 	@JsonFormat(shape = JsonFormat.Shape.ANY, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createdAt;
-	//@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
 	@JsonFormat(shape = JsonFormat.Shape.ANY, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime updatedAt;
 

@@ -19,7 +19,7 @@ public class ImplementsUserDetails implements UserDetails {
 
 	private String companyCode;
 
-	private Byte status;
+	//private Byte status;
 
 	private Integer companyId;
 
@@ -30,21 +30,20 @@ public class ImplementsUserDetails implements UserDetails {
 
 	// コンストラクタ
 	public ImplementsUserDetails(Integer id, String username, String password, String companyCode,
-			Integer companyId, Byte status, Collection<? extends GrantedAuthority> authorities) {
+			Integer companyId, Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.companyCode = companyCode;
 		this.companyId = companyId;
-		this.status = status;
 		this.authorities = authorities;
 	}
 
 	public static ImplementsUserDetails build(Integer id, String username, String password, String companyCode,
-			Integer companyId, Byte status,Collection<? extends GrantedAuthority> authorities) {
+			Integer companyId,Collection<? extends GrantedAuthority> authorities) {
 
 		// コンストラクタを実行してこのクラスのインスタンスを返す
-		return new ImplementsUserDetails(id, username, password,companyCode,companyId, status, authorities);
+		return new ImplementsUserDetails(id, username, password,companyCode,companyId, authorities);
 
 	}
 
@@ -75,9 +74,9 @@ public class ImplementsUserDetails implements UserDetails {
 		return companyId;
 	}
 
-	public Byte getStatus() {
+	/*public Byte getStatus() {
 		return status;
-	}
+	} */
 
 	@Override
 	public boolean isAccountNonExpired() {

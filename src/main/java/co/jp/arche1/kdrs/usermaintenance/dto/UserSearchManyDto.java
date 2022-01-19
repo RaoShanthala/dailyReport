@@ -1,7 +1,7 @@
 package co.jp.arche1.kdrs.usermaintenance.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +39,11 @@ public class UserSearchManyDto extends BaseDto {
 	    public RequestHd() {}
 
 		// プロパティ(メンバ変数)の宣言
-		private String loginUser;
-		private String name;
-		private Integer roleId;
-		private Byte roleLevel;
-		private LocalDate targetDate;
+	    private Integer companyId;
+		private String sei;
+		private String mei;
+		private Byte status;
+		private Byte deleted;
 	}
 	@Data
 	public static class ResponseDt implements Serializable {
@@ -55,17 +55,25 @@ public class UserSearchManyDto extends BaseDto {
 
 		// プロパティ(メンバ変数)の宣言
 		private Integer userId;
-		private LocalDate startDate;
-		private LocalDate endDate;
-		private String loginUser;
-		private String name;
+		private Integer companyId;
+		private Byte status;
+
 		private String email;
-		private Integer roleId;
-		private String roleName;
-		private Byte roleLevel;
-		private String roleLevelNameShort;
-		private LocalDate userRoleStartDate;
-		private LocalDate userRoleEndDate;
+		private String sei;
+		private String mei;
+		private String seiKana;
+		private String meiKana;
+		private String phone;
+		private String prefacture;
+		private String city;
+		private String streetNumber;
+		private String buildingName;
+		private byte deleted;
+		private byte authorityType;
+		private String authorityName;
+		private LocalDateTime createdAt;
+		private LocalDateTime updatedAt;
+
 	}
 //	@Data
 //	public static class ResponseDtTitle implements Serializable {

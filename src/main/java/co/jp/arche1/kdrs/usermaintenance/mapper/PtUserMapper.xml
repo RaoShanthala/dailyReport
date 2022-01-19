@@ -8,64 +8,36 @@
 		<result column="sei" property="sei" jdbcType="VARCHAR" />
 		<result column="mei" property="mei" jdbcType="VARCHAR" />
 		<result column="sei_kana" property="seiKana" jdbcType="VARCHAR" />
-		<result column="mei_kana" property="meikana" jdbcType="VARCHAR" />
-		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+		<result column="mei_kana" property="meiKana" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="prefacture" property="prefacture" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="street_number" property="streetNumber" jdbcType="VARCHAR" />
+		<result column="building_name" property="buildingName" jdbcType="VARCHAR" />
+		<result column="deleted" property="deleted" jdbcType="TINYINT" />
+
 	</resultMap>
 
 	<!-- select id="findAll" resultType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" -->
 	<select id="selectOne" resultMap="ptuserMap" >
 		SELECT
 			user_id,
-			start_date,
-			end_date,
-			login_user,
-			name,
 			password,
-			email,
-			updated_at
-		FROM
-			pt_user
-		WHERE
-			login_user = #{loginUser}
-	</select>
-
-	<select id="selectMany" resultMap="ptuserMap" >
-		SELECT
-			user_id,
 			mail as email,
-			password,
 			sei,
 			mei,
 			sei_kana,
 			mei_kana,
-			updated_at
+			phone,
+			prefacture,
+			city,
+			street_number,
+			building_name,
+			deleted
 		FROM
 			pt_user
 		WHERE
-			mail = #{email} and deleted = 0
-	</select>
-
-	<select id="selecAll" resultMap="ptuserMap" >
-		SELECT
-			user_id,
-			start_date,
-			end_date,
-			login_user,
-			name,
-			email
-		FROM
-			pt_user
-	   <trim prefix="WHERE" prefixOverrides="AND | OR ">
-	        <if test="userId != null">
-				AND pt_user.user_id = #{userId}
-	        </if>
-	        <if test="loginUser != null">
-				AND pt_user.login_user = #{loginUser}
-	        </if>
-	        <if test="userName != null">
-				AND pt_user.user_name = #{userName}
-	        </if>
-    	</trim>
+			mail = #{email}
 	</select>
 
 	<!-- insert id="insert" parameterType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" useGeneratedKeys="true" keyProperty="user_id" -->
@@ -73,52 +45,95 @@
 		INSERT INTO
 			pt_user
 		(
-			start_date,
-			end_date,
-			login_user,
-			name,
+			sei,
+			mei,
+			sei_kana,
+			mei_kana,
+			mail,
 			password,
-			email
+			phone,
+			prefacture,
+			city,
+			street_number,
+			building_name,
+			deleted,
+			created_at,
+			updated_at
 		)
 		VALUES
 		(
-			#{startDate}
-			,#{endDate}
-			,#{loginUser}
-			,#{name}
-			,#{password}
+			#{sei}
+			,#{mei}
+			,#{seiKana}
+			,#{meiKana}
 			,#{email}
+			,#{password}
+			,#{phone}
+			,#{prefacture}
+			,#{city}
+			,#{streetNumber}
+			,#{buildingName}
+			,#{deleted}
+			,CURRENT_TIMESTAMP
+			,CURRENT_TIMESTAMP
 		)
     </insert>
 
+    <update id="deleteUpdate">
+      UPDATE
+			pt_user
+   		<set>
+   		  created_at = CURRENT_TIMESTAMP,
+   		  deleted =  #{deleted}
+   		</set>
+   		WHERE
+			user_id = #{userId}
+    </update>
+
 	<!-- 引数が複数存在するので、 parameterTypeを使用しない。そのため、クラスならメンバー変数の前にインスタンス名が必要になる。
 	update id="update" parameterType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" useGeneratedKeys="true" keyProperty="user_id" -->
-	<update id="update" >
+
+	<update id="update" parameterType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" useGeneratedKeys="true" keyProperty="user_id">
 		UPDATE
 			pt_user
    		<set>
-			<if test="ptUserRepository.startDate != null">
-				start_date = #{ptUserRepository.startDate},
+			<if test="sei != null">
+				sei = #{sei},
 	       	</if>
-			<if test="ptUserRepository.endDate != null">
-				end_date = #{ptUserRepository.endDate},
+	       	<if test="mei != null">
+				mei = #{mei},
 	       	</if>
-			<if test="ptUserRepository.loginUser != null">
-				login_user = #{ptUserRepository.loginUser},
+	       	<if test="seiKana != null">
+				sei_kana = #{seiKana},
 	       	</if>
-			<if test="ptUserRepository.name != null">
-				name = #{ptUserRepository.name},
+	       	<if test="meiKana != null">
+				mei_kana = #{meiKana},
 	       	</if>
-			<if test="ptUserRepository.password != null">
-				password = #{ptUserRepository.password},
+			<if test="password != null">
+				password = #{password},
 	       	</if>
-			<if test="ptUserRepository.email != null">
-				email = #{ptUserRepository.email},
+			<if test="email != null">
+				mail = #{email},
 	       	</if>
+	       	<if test="phone != null">
+				phone = #{phone},
+	       	</if>
+	       	<if test="prefacture != null">
+				prefacture = #{prefacture},
+	       	</if>
+	       	<if test="city != null">
+				city = #{city},
+	       	</if>
+	       	<if test="streetNumber != null">
+				street_number = #{streetNumber},
+	       	</if>
+	       	<if test="buildingName != null">
+				building_name = #{buildingName},
+	       	</if>
+	       	updated_at = CURRENT_TIMESTAMP
    		</set>
 		WHERE
-			user_id = #{ptUserRepository.userId}
-			AND upd_datetime = #{updDatetimeWhenReading}
+			user_id = #{userId}
 	</update>
 
     <delete id="delete">

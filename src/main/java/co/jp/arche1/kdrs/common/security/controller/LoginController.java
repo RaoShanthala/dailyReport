@@ -121,7 +121,6 @@ public class LoginController {
 												 userDetails.getUsername(),
 												 userDetails.getCompanyCode(),
 												 userDetails.getCompanyId(),
-												 userDetails.getStatus(),
 												 authorities));
 	}
 /*

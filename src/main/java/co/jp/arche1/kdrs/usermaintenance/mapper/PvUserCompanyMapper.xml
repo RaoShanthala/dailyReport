@@ -9,13 +9,37 @@
 		<result column="sei" property="sei" jdbcType="VARCHAR" />
 		<result column="mei" property="mei" jdbcType="VARCHAR" />
 		<result column="sei_kana" property="seiKana" jdbcType="VARCHAR" />
-		<result column="mei_kana" property="meikana" jdbcType="VARCHAR" />
-		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="mei_kana" property="meiKana" jdbcType="VARCHAR" />
 		<result column="company_code" property="companyCode" jdbcType="VARCHAR" />
 		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
 
 	</resultMap>
 
+
+	<!--select id="selectOne" resultMap="ptuserMap" >
+		SELECT
+			user.user_id,
+			user.mail as email,
+			user.password,
+			user.sei,
+			user.mei,
+			user.sei_kana,
+			user.mei_kana,
+			user.updated_at,
+			compuser.company_id,
+			compuserauth.status,
+			company.company_code
+		FROM
+			pt_user user
+			left join pt_company_user compuser on compuser.user_id = user.user_id
+			left join pt_company company on company.company_id = compuser.company_id
+			left join pt_company_user_authority compuserauth on compuserauth.user_id = user.user_id and compuserauth.company_id = compuser.company_id
+		WHERE
+			mail = #{email} and user.deleted = 0
+			<if test="companyCode != null">
+		       AND company.company_code = #{companyCode}
+	        </if>
+	</select-->
 
 	<select id="selectOne" resultMap="ptuserMap" >
 		SELECT
@@ -28,7 +52,6 @@
 			user.mei_kana,
 			user.updated_at,
 			compuser.company_id,
-			compuser.status,
 			company.company_code
 		FROM
 			pt_user user
