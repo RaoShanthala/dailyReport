@@ -41,6 +41,7 @@ public class ConstructionListDto extends BaseDto {
 		}
 
 		// プロパティ(メンバ変数)の宣言
+		private int companyId;
 		private String constCode;
 		private String constName;
 		private Byte targetState;
@@ -58,6 +59,7 @@ public class ConstructionListDto extends BaseDto {
 		}
 
 		// プロパティ(メンバ変数)の宣言
+		private Integer companyId;
 		private Integer constId;
 		private String constCode;
 		private String constName;

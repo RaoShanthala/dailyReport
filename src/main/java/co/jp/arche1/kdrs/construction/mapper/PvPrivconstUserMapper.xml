@@ -3,10 +3,11 @@
 <mapper namespace="co.jp.arche1.kdrs.construction.mapper.PvPrivconstUserMapper" >
 	<resultMap id="pvPrivconstMap" type="co.jp.arche1.kdrs.construction.repository.PvPrivconstUserRepository" >
 		<id column="priv_const_id" property="privConstId" jdbcType="INTEGER" />
+		<id column="company_id" property="companyId" jdbcType="INTEGER" />
 		<result column="priv_const_code" property="privConstCode" jdbcType="VARCHAR" />
 		<result column="priv_const_name" property="privConstName" jdbcType="VARCHAR" />
-		<result column="user_name" property="userName" jdbcType="VARCHAR" />
-		<result column="login_user" property="loginUser" jdbcType="VARCHAR" />
+		<result column="sei" property="sei" jdbcType="VARCHAR" />
+		<result column="mei" property="mei" jdbcType="VARCHAR" />
 		<result column="const_id" property="constId" jdbcType="INTEGER" />
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
 		<result column="deleted" property="deleted" jdbcType="TINYINT" />
@@ -21,14 +22,17 @@
 
 	<select id="selectList" resultMap="pvPrivconstMap" >
 		SELECT
-			priv_const_id, priv_const_name, user.name as user_name
+			company_id, priv_const_id, priv_const_name, user.sei, user.mei
 		FROM pt_privconst
 		left join pt_user user on user.user_id = pt_privconst.user_id
-        <trim prefix="WHERE" prefixOverrides="AND | OR ">
-	        <if test="userName != null and searchType != null and searchType == 2">
-				AND user.name like CONCAT('%', #{userName},'%')
+        WHERE pt_privconst.company_id = #{companyId}
+	        <if test="sei != null and sei != '' and searchType != null and searchType == 2">
+				AND user.sei like CONCAT('%', #{sei},'%')
 	        </if>
-           <if test="privConstName != null and searchType != null and searchType == 2">
+	        <if test="mei != null and mei != '' and searchType != null and searchType == 2">
+				AND user.mei like CONCAT('%', #{mei},'%')
+	        </if>
+           <if test="privConstName != null and privConstName != '' and searchType != null and searchType == 2">
 				AND pt_privconst.priv_const_name like CONCAT('%', #{privConstName},'%')
 	        </if>
 	        <if test="searchType != null and searchType == 2">
@@ -37,19 +41,19 @@
             <if test="searchType != null and searchType == 1 ">
 				AND pt_privconst.const_id = #{constId}
 	        </if>
-    	</trim>
+
         GROUP BY priv_const_id;
     </select>
 
     <select id="selectMany" resultMap="pvPrivconstMap" >
 		SELECT
-			priv_const_id, priv_const_code, priv_const_name, COALESCE(MAX(const_id), 0), deleted,
-			pt_privconst.user_id,
+			company_id,priv_const_id, priv_const_code, priv_const_name,
+			COALESCE(MAX(const_id), 0), deleted,pt_privconst.user_id,
 			max_report_no, max_order_no, max_work_no, max_image_no, created_at, updated_at,
-			user.name as user_name, user.login_user
+			user.sei, user.mei
 		FROM pt_privconst
 		left join pt_user user on user.user_id = pt_privconst.user_id
-        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+        WHERE pt_privconst.company_id = #{companyId}
 	        <if test="userId != null">
 				AND pt_privconst.user_id = #{userId}
 	        </if>
@@ -59,7 +63,7 @@
             <if test="deleted != null and deleted != 2 ">
 				AND pt_privconst.deleted = #{deleted}
 	        </if>
-    	</trim>
+
         GROUP BY priv_const_id;
     </select>
 

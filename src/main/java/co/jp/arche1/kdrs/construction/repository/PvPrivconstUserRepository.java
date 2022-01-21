@@ -9,14 +9,16 @@ import lombok.Data;
 @Data
 public class PvPrivconstUserRepository {
 
+	private Integer companyId;
 	private Integer privConstId;
 	private String privConstCode;
 	private String privConstName;
-	private String userName;
+	private String sei;
+	private String mei;
 
 	private Integer constId;
 	private Integer userId;
-	private String loginUser;
+	//private String loginUser;
 	private Integer maxReportNo;
 	private Integer maxOrderNo;
 	private Integer maxWorkNo;

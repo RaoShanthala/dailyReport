@@ -22,15 +22,14 @@ public interface PtPrivconstMapper {
 
 	void updateWorkNo(@Param("ptPrivconstRepository") PtPrivconstRepository ptPrivconstRepository);
 
-	void updateConstIdToNull(@Param("constId") Integer constId);
+	void updateConstIdToNull(@Param("companyId") Integer companyId,@Param("constId") Integer constId);
 
 	Integer selectPrivconstId(@Param("privconstCode") String privconstCode);
+	//Integer selectPrivconstId(@Param("privconstCode") String privconstCode);
 
-	/*List<PtPrivconstRepository> selectMany(@Param("privConstId") Integer privConstId, @Param("userId") Integer userId,
-		@Param("deleted") byte deleted); */
 
 	void updateAllConstId(List<PtPrivconstRepository> ptPrivconstRepositoryList);
 
-//	List<PtPrivconstRepository> selectMany();
+
 
 }

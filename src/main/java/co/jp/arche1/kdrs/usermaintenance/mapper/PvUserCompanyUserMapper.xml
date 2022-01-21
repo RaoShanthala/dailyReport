@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.usermaintenance.mapper.PvUserCompanyUserMapper" >
+	<resultMap id="ptuserMap" type="co.jp.arche1.kdrs.usermaintenance.repository.PvUserCompanyUserRepository" >
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<id column="company_id" property="companyId" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="TINYINT" />
+		<result column="email" property="email" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="sei" property="sei" jdbcType="VARCHAR" />
+		<result column="mei" property="mei" jdbcType="VARCHAR" />
+		<result column="sei_kana" property="seiKana" jdbcType="VARCHAR" />
+
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="prefacture" property="prefacture" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="street_number" property="streetNumber" jdbcType="VARCHAR" />
+		<result column="building_name" property="buildingName" jdbcType="VARCHAR" />
+
+		<result column="deleted" property="deleted" jdbcType="TINYINT" />
+		<result column="authority_type" property="authorityType" jdbcType="TINYINT" />
+		<result column="authority_name" property="authorityName" jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<!-- select id="findAll" resultType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" -->
+	<select id="selectOneUser" resultMap="ptuserMap" >
+		SELECT
+			user.user_id,
+			mail as email,
+			sei,
+			mei,
+			sei_kana,
+			mei_kana,
+			password,
+			phone,
+			prefacture,
+			city,
+			street_number,
+			building_name,
+			deleted,
+			compuser.company_id,
+			compuserauth.status,
+			compuserauth.authority_type
+		FROM
+			pt_user user
+	    Left join pt_company_user compuser on compuser.user_id = user.user_id
+	    left join pt_company_user_authority compuserauth on compuser.user_id   = compuserauth.user_id and compuser.company_id = compuserauth.company_id
+		WHERE
+		   compuser.company_id = #{companyId}
+		   and user.user_id = #{userId}
+		order by user.user_id
+	</select>
+
+	<select id="selectManyUsers" resultMap="ptuserMap" >
+		SELECT
+			user.user_id,
+			mail as email,
+			sei,
+			mei,
+			sei_kana,
+			mei_kana,
+			phone,
+			prefacture,
+			city,
+			street_number,
+			building_name,
+			deleted,
+			compuser.company_id,
+			compuserauth.status,
+			auth.name as authority_name
+		FROM
+			pt_user user
+	    Left join pt_company_user compuser on compuser.user_id = user.user_id
+	    left join pt_company_user_authority compuserauth on compuser.user_id   = compuserauth.user_id and compuser.company_id = compuserauth.company_id
+	    left join pt_authority auth on auth.authority_type = compuserauth.authority_type
+		WHERE
+		   compuser.company_id = #{companyId}
+		   AND user.deleted = 0
+			 <if test="status != 0">
+				AND compuserauth.status = #{status}
+	        </if>
+	         <if test="deleted == 1">
+				OR user.deleted= 1
+	        </if>
+	        <if test="sei != null">
+	            AND user.sei LIKE CONCAT('%', #{sei}, '%')
+	        </if>
+	        <if test="mei != null">
+	            AND user.mei LIKE CONCAT('%', #{mei}, '%')
+	        </if>
+	     order by user.user_id
+
+	</select>
+
+
+
+</mapper>

@@ -32,6 +32,7 @@ public class ConstructionInsertDto extends BaseDto {
 		}
 
 		// プロパティ(メンバ変数)の宣言
+		private int companyId;
 		private String constCode;
 		private String constName;
 		private int userId;

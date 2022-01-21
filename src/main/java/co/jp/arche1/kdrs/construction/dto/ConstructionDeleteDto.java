@@ -31,6 +31,7 @@ public class ConstructionDeleteDto extends BaseDto {
 	    public RequestHd() {}
 
 		// プロパティ(メンバ変数)の宣言
+	    private Integer companyId;
 		private Integer constId;
 	}
 

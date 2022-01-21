@@ -156,8 +156,10 @@ public class ConstructionService extends BaseService {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		ConstructionListDto.RequestHd reqHd = constructionListDto.getReqHd();
+		System.out.println ("searchConstructionList reqHd.getCompanyId() " + reqHd.getCompanyId());
+
 		List<PtConstructionRepository> listPtConstructionRepository = ptConstructionMapper
-				.selectList(reqHd.getConstCode(), reqHd.getConstName(), reqHd.getTargetState(),
+				.selectList(reqHd.getCompanyId(), reqHd.getConstCode(), reqHd.getConstName(), reqHd.getTargetState(),
 						reqHd.getTargetStartDate(), reqHd.getTargetEndDate());
 
 		List<ConstructionListDto.ResponseDt> listResDt = constructionListDto.getResDt();
@@ -165,6 +167,7 @@ public class ConstructionService extends BaseService {
 			PtConstructionRepository ptConstructionRepository = it.next();
 
 			ConstructionListDto.ResponseDt resDt = new ConstructionListDto.ResponseDt();
+			resDt.setCompanyId(ptConstructionRepository.getCompanyId());
 			resDt.setConstId(ptConstructionRepository.getConstId());
 			resDt.setConstCode(ptConstructionRepository.getConstCode());
 			resDt.setConstName(ptConstructionRepository.getConstName());
@@ -196,8 +199,10 @@ public class ConstructionService extends BaseService {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		ConstructionSearchOneDto.RequestHd reqHd = constructionSearchOneDto.getReqHd();
-		PtConstructionRepository ptConstructionRepository = ptConstructionMapper.selectOne(reqHd.getConstId());
+		PtConstructionRepository ptConstructionRepository = ptConstructionMapper.selectOne(
+				reqHd.getCompanyId(),reqHd.getConstId());
 		ConstructionSearchOneDto.ResponseDt resDt = constructionSearchOneDto.getResDt();
+		resDt.setCompanyId(ptConstructionRepository.getCompanyId());
 		resDt.setConstId(ptConstructionRepository.getConstId());
 		resDt.setConstCode(ptConstructionRepository.getConstCode());
 		resDt.setConstName(ptConstructionRepository.getConstName());
@@ -221,6 +226,7 @@ public class ConstructionService extends BaseService {
 
 		ConstructionInsertDto.RequestHd reqHd = constructionInsertDto.getReqHd();
 		PtConstructionRepository ptConstructionRepository = new PtConstructionRepository();
+		ptConstructionRepository.setCompanyId(reqHd.getCompanyId());
 		ptConstructionRepository.setConstCode(reqHd.getConstCode());
 		ptConstructionRepository.setConstName(reqHd.getConstName());
 		ptConstructionRepository.setUserId(reqHd.getUserId());
@@ -247,6 +253,7 @@ public class ConstructionService extends BaseService {
 		List<PtPrivconstRepository> listPtPrivconstRepository = new ArrayList<PtPrivconstRepository>();
 		for (int i = 0; i < reqDt.getPrivConstId().length; i++) {
 			PtPrivconstRepository ptPrivconstRepository = new PtPrivconstRepository();
+			ptPrivconstRepository.setCompanyId(reqHd.getCompanyId());
 			if (reqHd.getAction() == 1) { //add
 				ptPrivconstRepository.setConstId(reqHd.getConstId());
 			}else { // delete
@@ -275,9 +282,10 @@ public class ConstructionService extends BaseService {
 		ConstructionUpdateDto.RequestHd reqHd = constructionUpdateDto.getReqHd();
 		PtConstructionRepository ptConstructionRepository = new PtConstructionRepository();
 		ptConstructionRepository.setConstId(reqHd.getConstId());
+		ptConstructionRepository.setCompanyId(reqHd.getCompanyId());
 		ptConstructionRepository.setConstCode(reqHd.getConstCode());
 		ptConstructionRepository.setConstName(reqHd.getConstName());
-		//ptConstructionRepository.setUserId(reqHd.getUserId());  Needed??
+		ptConstructionRepository.setUserId(reqHd.getUserId());  //Needed??
 		ptConstructionRepository.setStartDate(reqHd.getStartDate());
 		ptConstructionRepository.setEndDate(reqHd.getEndDate());
 		try {
@@ -299,9 +307,9 @@ public class ConstructionService extends BaseService {
 		ConstructionDeleteDto.RequestHd reqHd = constructionDeleteDto.getReqHd();
 		try {
 			//update const_id = null for pt_privconst table where const_id = reqHd.getConstId()
-			ptPrivconstMapper.updateConstIdToNull(reqHd.getConstId());
+			ptPrivconstMapper.updateConstIdToNull(reqHd.getCompanyId(), reqHd.getConstId());
 			// 工事の削除
-			ptConstructionMapper.delete(reqHd.getConstId());
+			ptConstructionMapper.delete(reqHd.getCompanyId(),reqHd.getConstId());
 		} catch (Exception ex) {
 			constructionDeleteDto.setResultCode("002");
 			constructionDeleteDto.setResultMessage("（操作：delete、テーブル名：pt_construction）");
@@ -316,17 +324,18 @@ public class ConstructionService extends BaseService {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		PrivConstructionSearchListDto.RequestHd reqHd = privConstructionSearchListDto.getReqHd();
-		List<PvPrivconstUserRepository> listPtPricconstRepository = pvPrivconstUserMapper.selectList(reqHd.getConstId(),
-				reqHd.getPrivConstName(), reqHd.getUserName(), reqHd.getSearchType());
+		List<PvPrivconstUserRepository> listPtPricconstRepository = pvPrivconstUserMapper.selectList(reqHd.getCompanyId(),
+				reqHd.getConstId(), reqHd.getPrivConstName(), reqHd.getSei(), reqHd.getMei() ,reqHd.getSearchType());
 		List<PrivConstructionSearchListDto.ResponseDt> listResDt = privConstructionSearchListDto.getResDt();
 		for (Iterator<PvPrivconstUserRepository> it = listPtPricconstRepository.iterator(); it.hasNext();) {
 			PvPrivconstUserRepository pvPrivconstUserRepository = it.next();
 
 			PrivConstructionSearchListDto.ResponseDt resDt = new PrivConstructionSearchListDto.ResponseDt();
+			resDt.setCompanyId(pvPrivconstUserRepository.getPrivConstId());
 			resDt.setPrivConstId(pvPrivconstUserRepository.getPrivConstId());
 			//resDt.setPrivConstCode(pvPrivconstUserRepository.getPrivConstCode());
 			resDt.setPrivConstName(pvPrivconstUserRepository.getPrivConstName());
-		    resDt.setUserName(pvPrivconstUserRepository.getUserName());
+		    resDt.setUserName(pvPrivconstUserRepository.getSei() + " " + pvPrivconstUserRepository.getMei());
 			listResDt.add(resDt);
 		}
 		makeResponseTitle(privConstructionSearchListDto);
@@ -344,7 +353,8 @@ public class ConstructionService extends BaseService {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		PrivConstructionSearchManyDto.RequestHd reqHd = privConstructionSearchManyDto.getReqHd();
-		List<PvPrivconstUserRepository> listPtPricconstRepository = pvPrivconstUserMapper.selectMany(reqHd.getPrivConstId(),
+		List<PvPrivconstUserRepository> listPtPricconstRepository = pvPrivconstUserMapper.selectMany(
+				reqHd.getCompanyId(), reqHd.getPrivConstId(),
 				reqHd.getUserId(), reqHd.getDeleted());
 
 		// List<PtPrivconstRepository> listPtPricconstRepository =
@@ -355,10 +365,11 @@ public class ConstructionService extends BaseService {
 			PvPrivconstUserRepository pvPrivconstUserRepository = it.next();
 
 			PrivConstructionSearchManyDto.ResponseDt resDt = new PrivConstructionSearchManyDto.ResponseDt();
+			resDt.setCompanyId(pvPrivconstUserRepository.getCompanyId());
 			resDt.setPrivConstId(pvPrivconstUserRepository.getPrivConstId());
 			resDt.setUserId(pvPrivconstUserRepository.getUserId());
-			resDt.setUserName(pvPrivconstUserRepository.getUserName());
-			resDt.setLoginUser(pvPrivconstUserRepository.getLoginUser());
+			resDt.setUserName(pvPrivconstUserRepository.getSei() + " " +pvPrivconstUserRepository.getMei());
+			//resDt.setLoginUser(pvPrivconstUserRepository.getLoginUser());
 			resDt.setConstId(pvPrivconstUserRepository.getConstId());
 			resDt.setPrivConstCode(pvPrivconstUserRepository.getPrivConstCode());
 			resDt.setPrivConstName(pvPrivconstUserRepository.getPrivConstName());

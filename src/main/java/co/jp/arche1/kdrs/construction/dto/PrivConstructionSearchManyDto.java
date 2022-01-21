@@ -38,6 +38,7 @@ public class PrivConstructionSearchManyDto extends BaseDto{
 		    public RequestHd() {}
 
 			// プロパティ(メンバ変数)の宣言
+		    private Integer companyId;
 			private Integer  userId;
 			private Integer privConstId;
 			private Byte deleted;
@@ -51,6 +52,7 @@ public class PrivConstructionSearchManyDto extends BaseDto{
 		    public ResponseDt() {}
 
 			// プロパティ(メンバ変数)の宣言
+		    private Integer companyId;
 			private Integer privConstId;
 			private String privConstCode;
 			private String privConstName;

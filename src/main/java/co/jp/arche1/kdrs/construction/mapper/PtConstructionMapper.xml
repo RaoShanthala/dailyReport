@@ -3,6 +3,7 @@
 <mapper namespace="co.jp.arche1.kdrs.construction.mapper.PtConstructionMapper" >
 	<resultMap id="ptConstructionMap" type="co.jp.arche1.kdrs.construction.repository.PtConstructionRepository" >
 		<id column="const_id" property="constId" jdbcType="INTEGER" />
+		<id column="company_id" property="companyId" jdbcType="INTEGER" />
 		<result column="const_code" property="constCode" jdbcType="VARCHAR" />
 		<result column="const_name" property="constName" jdbcType="VARCHAR" />
 		<result column="deleted" property="deleted" jdbcType="TINYINT" />
@@ -14,11 +15,11 @@
 
 	<select id="selectMany" resultMap="ptConstructionMap" >
 		SELECT
-			const_id, const_code, const_name,  deleted,
+			company_id, const_id, const_code, const_name,  deleted,
 			start_date, end_date,
 			created_at, updated_at
 		FROM pt_construction
-        <trim prefix="WHERE" prefixOverrides="AND | OR ">
+        WHERE company_id = #{companyId}
 	        <if test="constId != null">
 				AND const_id = #{constId}
 	        </if>
@@ -31,17 +32,17 @@
             <if test="deleted != null and deleted != 2 ">
 				AND deleted = #{deleted}
 	        </if>
-    	</trim>
+
         GROUP BY const_id;
     </select>
 
     <select id="selectList" resultMap="ptConstructionMap">
 		SELECT
-			const_id, const_code, const_name,  deleted,
+			company_id, const_id, const_code, const_name,  deleted,
 			start_date, end_date,
 			created_at, updated_at
 		FROM pt_construction
-		<trim prefix="WHERE" prefixOverrides="AND | OR ">
+		WHERE company_id = #{companyId}
 			<if test="constCode != null">
 				AND const_code like CONCAT('%', #{constCode},'%')
 	        </if>
@@ -62,7 +63,7 @@
 	        <if test="targetState == 3 and targetEndDt != null">
 	            AND pt_construction.end_date <![CDATA[ <= ]]> #{targetEndDt}
 	        </if>
-    	</trim>
+
 		ORDER BY pt_construction.end_date;
 
 	</select>
@@ -74,13 +75,14 @@
 			start_date, end_date,
 			created_at, updated_at
 		FROM pt_construction
-         WHERE  const_id = #{constId}
+         WHERE  const_id = #{constId} AND company_id = #{companyId}
     </select>
 
      <insert id="insert" parameterType="co.jp.arche1.kdrs.construction.repository.PtConstructionRepository" useGeneratedKeys="true" keyProperty="constId">
 		INSERT INTO pt_construction
 		(
 			const_code,
+			company_id,
 			const_name,
 			user_id,
 			start_date,
@@ -91,6 +93,7 @@
 		VALUES
 		(
 		    #{constCode},
+		    #{companyId},
 			#{constName},
 			#{userId},
 			#{startDate},
@@ -105,17 +108,18 @@
 			<set>
 				const_name = #{constName},
 				const_code = #{constCode},
+				user_id = #{userId},
 				start_date = #{startDate},
 				end_date = #{endDate},
 				updated_at = CURRENT_TIMESTAMP
            </set>
-			WHERE const_id = #{constId}
+			WHERE const_id = #{constId}  AND company_id = #{companyId}
 	</update>
 
     <delete id="delete" >
 		DELETE FROM pt_construction
 		WHERE
-	 	const_id = #{constId}
+	 	const_id = #{constId} AND company_id = #{companyId}
 	</delete>
 
 </mapper>

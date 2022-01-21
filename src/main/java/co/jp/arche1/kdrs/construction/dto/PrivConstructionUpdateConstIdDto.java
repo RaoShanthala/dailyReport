@@ -32,6 +32,7 @@ public class PrivConstructionUpdateConstIdDto extends BaseDto{
 		}
 
 		// プロパティ(メンバ変数)の宣言
+		private int companyId;
 		private int constId;
 		private int action; // 1 for insert and 2 for delete
 	}

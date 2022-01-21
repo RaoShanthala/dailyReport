@@ -73,14 +73,14 @@ public class UserService extends BaseService {
 			if (prevUserId != 0 && prevUserId == pvUserCompanyUserRepository.getUserId()){
 				int indexOfLastElement = listResDt.size() - 1;
 				listResDt.remove(indexOfLastElement);
-				resDt.setAuthorityName("user and admin");
+				resDt.setAuthorityName("ユーザ、管理者");
 			}else {
 				resDt.setAuthorityName(pvUserCompanyUserRepository.getAuthorityName());
 			}
 			prevUserId = pvUserCompanyUserRepository.getUserId();
 			resDt.setUserId(pvUserCompanyUserRepository.getUserId());
 			resDt.setCompanyId(pvUserCompanyUserRepository.getCompanyId());
-			resDt.setStatus(pvUserCompanyUserRepository.getStatus());
+			resDt.setStatus(getStatus(pvUserCompanyUserRepository.getStatus()));
 			if (StringUtils.isNotEmpty(pvUserCompanyUserRepository.getEmail())) {
 				resDt.setEmail(pvUserCompanyUserRepository.getEmail());
 			}
@@ -424,6 +424,26 @@ public class UserService extends BaseService {
 			userMonthOrderDto.setResultCode("001");
 		}
 		return;
+	}
+
+	private String getStatus(Byte status) {
+		String statusString = "";
+		// 1：申請（iphone）、2：承認（管理者）、3：承諾（iphone）、7：承認拒否（管理者）、8：承諾拒否（iphone）、9：削除（管理者）'
+		if (status == (byte)1) {
+			statusString = "申請（iphone）";
+		}else if (status == (byte)2) {
+			statusString = "承認（管理者）";
+		}else if (status == (byte)3) {
+			statusString = "承諾（iphone）";
+		}else if (status == (byte)7) {
+			statusString = "承認拒否（管理者）";
+		}else if (status == (byte)8) {
+			statusString = "承諾拒否（iphone）";
+		}else if (status == (byte)9) {
+			statusString = "削除（管理者）";
+		}
+
+		return statusString;
 	}
 
 }

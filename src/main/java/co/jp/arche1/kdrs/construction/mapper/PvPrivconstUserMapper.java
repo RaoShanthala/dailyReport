@@ -10,12 +10,15 @@ import co.jp.arche1.kdrs.construction.repository.PvPrivconstUserRepository;
 @Mapper
 public interface PvPrivconstUserMapper {
 
-	List<PvPrivconstUserRepository> selectList(@Param("constId") Integer constId,
+	List<PvPrivconstUserRepository> selectList(@Param("companyId") Integer companyId,
+			@Param("constId") Integer constId,
 			@Param("privConstName") String privConstName,
-			@Param("userName") String userName,
+			@Param("sei") String sei,
+			@Param("mei") String mei,
 			@Param("searchType") Byte searchType);
 
-	List<PvPrivconstUserRepository> selectMany(@Param("privConstId") Integer privConstId, @Param("userId") Integer userId,
+	List<PvPrivconstUserRepository> selectMany(@Param("companyId") Integer companyId,
+			@Param("privConstId") Integer privConstId, @Param("userId") Integer userId,
 			@Param("deleted") byte deleted);
 
 }

@@ -10,6 +10,7 @@ import lombok.Data;
 public class PtPrivconstRepository {
 
 	private Integer privConstId;
+	private Integer companyId;
 	private String privConstCode;
 	private String privConstName;
 	private Integer constId;
@@ -17,7 +18,7 @@ public class PtPrivconstRepository {
 	private Integer maxReportNo;
 	private Integer maxOrderNo;
 	private Integer maxWorkNo;
-	private Integer maxImageNo;
+	//private Integer maxImageNo;
 	private Byte deleted;
 	@JsonFormat(shape = JsonFormat.Shape.ANY, pattern = "yyyy-MM-dd HH:mm:ss")
 	private LocalDateTime createdAt;

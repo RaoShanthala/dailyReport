@@ -3,6 +3,7 @@
 <mapper namespace="co.jp.arche1.kdrs.construction.mapper.PtPrivconstMapper" >
 	<resultMap id="ptPrivconstMap" type="co.jp.arche1.kdrs.construction.repository.PtPrivconstRepository" >
 		<id column="priv_const_id" property="privConstId" jdbcType="INTEGER" />
+		<id column="company_id" property="companyId" jdbcType="INTEGER" />
 		<result column="priv_const_code" property="privConstCode" jdbcType="VARCHAR" />
 		<result column="priv_const_name" property="privConstName" jdbcType="VARCHAR" />
 		<result column="const_id" property="constId" jdbcType="INTEGER" />
@@ -11,7 +12,7 @@
 		<result column="max_report_no" property="maxReportNo" jdbcType="INTEGER" />
 		<result column="max_order_no" property="maxOrderNo" jdbcType="INTEGER" />
 		<result column="max_work_no" property="maxWorkNo" jdbcType="INTEGER" />
-		<result column="max_image_no" property="maxImageNo" jdbcType="INTEGER" />
+		<!-- result column="max_image_no" property="maxImageNo" jdbcType="INTEGER" /-->
 		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
 		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
 
@@ -27,10 +28,11 @@
 
 	 <insert id="insertAll" parameterType="java.util.List">
   		insert into pt_privconst
-        (priv_const_code, priv_const_name, user_id, created_at, updated_at)
+        (company_id,priv_const_code, priv_const_name, user_id, created_at, updated_at)
         values
         <foreach collection="list" item="item" separator=",">
          (
+            #{item.companyId,jdbcType=INTEGER},
         	#{item.privConstCode,jdbcType=VARCHAR},
          	#{item.privConstName,jdbcType=VARCHAR},
          	#{item.userId,jdbcType=INTEGER},
@@ -47,7 +49,7 @@
          <set>
             const_id = #{item.constId}
          </set>
-           WHERE priv_const_Id = #{item.privConstId}
+           WHERE priv_const_Id = #{item.privConstId} and company_id = #{item.companyId}
     	</foreach>
 	</update>
 
@@ -63,7 +65,7 @@
                , user_id = #{item.userId}
            </if>
          </set>
-           WHERE priv_const_code = #{item.privConstCode}
+           WHERE priv_const_code = #{item.privConstCode} and company_id = #{item.companyId}
     	</foreach>
 	</update>
 
@@ -74,7 +76,7 @@
             updated_at = #{item.updatedAt},
             deleted = #{item.deleted}
         </set>
-		    WHERE priv_const_code = #{item.privConstCode}
+		    WHERE priv_const_code = #{item.privConstCode} and company_id = #{item.companyId}
       </foreach>
     </update >
 
@@ -84,7 +86,7 @@
        <set>
           pt_privconst.const_id = NULL
        </set>
-       WHERE pt_privconst.priv_const_id = PCON.priv_const_id;
+       WHERE pt_privconst.priv_const_id = PCON.priv_const_id and and company_id = #{item.companyId}
      </update>
 
      <update id="updateReportNo" >
@@ -94,7 +96,7 @@
 		    	updated_at = #{ptPrivconstRepository.updatedAt}
 		    	, max_report_no = max_report_no + 1
             </set>
-	  	WHERE priv_const_code = #{ptPrivconstRepository.privConstCode}
+	  	WHERE priv_const_code = #{ptPrivconstRepository.privConstCode} and company_id = #{item.companyId}
 	 </update>
 
 	<update id="updateOrderNo" >
@@ -104,7 +106,7 @@
 		    	updated_at = #{ptPrivconstRepository.updatedAt}
 		    	, max_order_no = max_order_no + 1
             </set>
-	  	WHERE priv_const_code = #{ptPrivconstRepository.privConstCode}
+	  	WHERE priv_const_code = #{ptPrivconstRepository.privConstCode} and company_id = #{item.companyId}
 	</update>
 
 	<update id="updateWorkNo" >
@@ -114,7 +116,7 @@
 		    	updated_at = #{ptPrivconstRepository.updatedAt}
 		    	, max_work_no = max_work_no + 1
             </set>
-	  	WHERE priv_const_code = #{ptPrivconstRepository.privConstCode}
+	  	WHERE priv_const_code = #{ptPrivconstRepository.privConstCode} and company_id = #{item.companyId}
 	</update>
 
 </mapper>

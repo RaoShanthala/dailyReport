@@ -46,6 +46,7 @@ public class ReportService extends BaseService {
 
 		for (int i = 0; i < listReqDt.size(); i++) {
 			PtReportRepository ptReportRepository = new PtReportRepository();
+
 			ptReportRepository.setReportCode(listReqDt.get(i).getReportCode());
 			ptReportRepository.setUpdatedAt(listReqDt.get(i).getUpdatedAt());
 			// 1.登録、2.更新、3.削除

@@ -53,10 +53,12 @@ public class ConstructionController {
 	@RequestMapping(value = "/Construction/ReferConstructionOne", method = RequestMethod.GET)
 	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public ConstructionSearchOneDto referConstructionOne(
+			@RequestParam(name = "companyId", required = true) Integer companyId,
 			@RequestParam(name = "constId", required = true) Integer constId) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 		ConstructionSearchOneDto constructionSearchOneDto = new ConstructionSearchOneDto();
 		ConstructionSearchOneDto.RequestHd regHd = constructionSearchOneDto.getReqHd();
+		regHd.setCompanyId(companyId);
 		regHd.setConstId(constId);
 		constructionService.searchConstructionOne(constructionSearchOneDto);
 		return constructionSearchOneDto;
@@ -95,6 +97,7 @@ public class ConstructionController {
 	@RequestMapping(value = "/Construction/ReferConstructionList", method = RequestMethod.GET)
 	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public ConstructionListDto referConstructionList(
+			@RequestParam(name = "companyId", required = true) Integer companyId,
 			@RequestParam(name = "constCode", required = false) String constCode,
 			@RequestParam(name = "constName", required = false) String constName,
 			@RequestParam(name = "targetState", required = false) Byte targetState,
@@ -106,6 +109,7 @@ public class ConstructionController {
 		ConstructionListDto constructionListDto = new ConstructionListDto();
 		ConstructionListDto.RequestHd regHd = constructionListDto.getReqHd();
 
+		regHd.setCompanyId(companyId);
 		regHd.setConstCode(constCode);
 		regHd.setConstName(constName);
 		regHd.setTargetState(targetState);
@@ -118,7 +122,7 @@ public class ConstructionController {
 
 	// 工事登録
 	@RequestMapping(value = "/Construction/RegisterConstruction", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
+	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public ConstructionInsertDto registerConstruction(@RequestBody ConstructionInsertDto constructionInsertDto)
 			throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -128,7 +132,7 @@ public class ConstructionController {
 
 	// 工事削除
 	@RequestMapping(value = "/Construction/DeleteConstruction", method = RequestMethod.DELETE)
-	@PreAuthorize("hasRole('PM_ADMIN')")
+	//@PreAuthorize("hasRole('PM_ADMIN')")
 	public ConstructionDeleteDto deleteConstruction(@RequestBody ConstructionDeleteDto constructionDeleteDto)
 			throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -138,7 +142,7 @@ public class ConstructionController {
 
 	// 工事更新
 	@RequestMapping(value = "/Construction/UpdateConstruction", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
+	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public ConstructionUpdateDto updateConstruction(@RequestBody ConstructionUpdateDto constructionUpdateDto)
 			throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -148,19 +152,23 @@ public class ConstructionController {
 
 	// プライベート工事List
 	@RequestMapping(value = "/Construction/ReferPrivConstructionList", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
+	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public PrivConstructionSearchListDto referPrivConstructionList(
+			@RequestParam(name = "companyId", required = true) Integer companyId,
 			@RequestParam(name = "constId", required = false) Integer constId,
 			@RequestParam(name = "privConstName", required = false) String privConstName,
-			@RequestParam(name = "userName", required = false) String userName,
+			@RequestParam(name = "sei", required = false) String sei,
+			@RequestParam(name = "mei", required = false) String mei,
+			//@RequestParam(name = "userName", required = false) String userName,
 			@RequestParam(name = "searchType", required = true) Byte searchType) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		PrivConstructionSearchListDto privConstructionSearchListDto = new PrivConstructionSearchListDto();
 		PrivConstructionSearchListDto.RequestHd regHd = privConstructionSearchListDto.getReqHd();
-
+		regHd.setCompanyId(companyId);
 		regHd.setConstId(constId);
-		regHd.setUserName(userName);
+		regHd.setSei(sei);
+		regHd.setMei(mei);
 		regHd.setPrivConstName(privConstName);
 		regHd.setSearchType(searchType);
 
@@ -170,7 +178,7 @@ public class ConstructionController {
 
 	// 工事Id登録
 	@RequestMapping(value = "/Construction/AddConstIds", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('PM_ADMIN')")
+	//@PreAuthorize("hasRole('PM_ADMIN')")
 	public PrivConstructionUpdateConstIdDto addConstIds(
 			@RequestBody PrivConstructionUpdateConstIdDto privConstructionUpdateConstIdDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -180,7 +188,7 @@ public class ConstructionController {
 
 	// 工事Id更新
 	@RequestMapping(value = "/Construction/DeleteConstIds", method = RequestMethod.POST)
-	@PreAuthorize("hasRole('PM_ADMIN')")
+	//@PreAuthorize("hasRole('PM_ADMIN')")
 	public PrivConstructionUpdateConstIdDto deleteConstIds(
 			@RequestBody PrivConstructionUpdateConstIdDto privConstructionUpdateConstIdDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
@@ -190,8 +198,9 @@ public class ConstructionController {
 
 	// プライベート工事明細検索  (can be used for users history function as well)
 	@RequestMapping(value = "/Construction/ReferPrivConstructionMany", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
+	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public PrivConstructionSearchManyDto referPrivConstructionMany(
+			@RequestParam(name = "companyId", required = true) Integer companyId,
 			@RequestParam(name = "userId", required = false) Integer userId,
 			@RequestParam(name = "privConstId", required = false) Integer privConstId,
 			@RequestParam(name = "deleted", required = false) String deleted) throws Exception {
@@ -200,6 +209,7 @@ public class ConstructionController {
 		PrivConstructionSearchManyDto privConstructionSearchManyDto = new PrivConstructionSearchManyDto();
 		PrivConstructionSearchManyDto.RequestHd regHd = privConstructionSearchManyDto.getReqHd();
 
+		regHd.setCompanyId(companyId);
 		regHd.setUserId(userId);
 		regHd.setPrivConstId(privConstId);
 		if (deleted != null) {
@@ -217,8 +227,9 @@ public class ConstructionController {
 
 	// 工事月別日報一覧 ConstructionMonthReport
 	@RequestMapping(value = "/Construction/ReferConstructionMonthReportMany", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
+	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public ConstructionMonthReportDto referConstructionMonthReportMany(
+			//@RequestParam(name = "companyId", required = true) Integer companyId,
 			@RequestParam(name = "constId", required = true) Integer constId,
 			 @RequestParam(name = "startDate", required = true) @DateTimeFormat(iso =
 			 DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -251,7 +262,7 @@ public class ConstructionController {
 
 	// 工事月別作業一覧 ConstructionMonthOrder
 	@RequestMapping(value = "/Construction/ReferConstructionMonthOrderMany", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
+	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public ConstructionMonthOrderDto referConstructionMonthOrderMany(
 			@RequestParam(name = "constId", required = true) Integer constId,
 			@RequestParam(name = "startDate", required = true) @DateTimeFormat(iso =

@@ -36,6 +36,7 @@ public class ConstructionSearchOneDto extends BaseDto {
 		}
 
 		// プロパティ(メンバ変数)の宣言
+		private Integer companyId;
 		private Integer constId;
 	}
 
@@ -49,6 +50,7 @@ public class ConstructionSearchOneDto extends BaseDto {
 		}
 
 		// プロパティ(メンバ変数)の宣言
+		private Integer companyId;
 		private Integer constId;
 		private String constCode;
 		private String constName;

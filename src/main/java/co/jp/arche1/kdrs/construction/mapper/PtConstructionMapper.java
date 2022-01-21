@@ -11,17 +11,19 @@ import co.jp.arche1.kdrs.construction.repository.PtConstructionRepository;
 @Mapper
 public interface PtConstructionMapper {
 
-	List<PtConstructionRepository> selectMany(@Param("constId") Integer constId, @Param("constCode") String constCode,
+	List<PtConstructionRepository> selectMany(@Param("companyId") Integer companyId,
+			@Param("constId") Integer constId, @Param("constCode") String constCode,
 			@Param("constName") String constName, @Param("deleted") byte deleted);
 
-	List<PtConstructionRepository> selectList(@Param("constCode") String constCode,
+	List<PtConstructionRepository> selectList(@Param("companyId") Integer companyId,
+			@Param("constCode") String constCode,
 			@Param("constName") String constName, @Param("targetState") byte targetState,
 			@Param("targetStartDt") LocalDate targetStartDate,
 			@Param("targetEndDt") LocalDate targetEndDate );
 
-	PtConstructionRepository selectOne(@Param("constId") Integer constId);
+	PtConstructionRepository selectOne(@Param("companyId") Integer companyId,@Param("constId") Integer constId);
 
-	Integer delete(@Param("constId") Integer constId);
+	Integer delete(@Param("companyId") Integer companyId,@Param("constId") Integer constId);
 
     Integer insert(PtConstructionRepository ptConstructionRepository);
 

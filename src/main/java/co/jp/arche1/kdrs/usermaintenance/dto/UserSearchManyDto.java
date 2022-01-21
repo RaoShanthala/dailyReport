@@ -56,7 +56,7 @@ public class UserSearchManyDto extends BaseDto {
 		// プロパティ(メンバ変数)の宣言
 		private Integer userId;
 		private Integer companyId;
-		private Byte status;
+		private String status;
 
 		private String email;
 		private String sei;

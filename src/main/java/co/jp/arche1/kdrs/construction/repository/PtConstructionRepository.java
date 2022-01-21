@@ -10,6 +10,7 @@ import lombok.Data;
 public class PtConstructionRepository {
 
 	private Integer constId;
+	private Integer companyId;
 	private String constCode;
 	private String constName;
 	private Byte deleted;

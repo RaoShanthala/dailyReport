@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.usermaintenance.mapper.PtCompanyUserAuthorityMapper" >
+	<resultMap id="ptCompanyUserMap" type="co.jp.arche1.kdrs.usermaintenance.repository.PtCompanyUserAuthorityRepository" >
+		<id column="user_id" property="userId" jdbcType="INTEGER" />
+		<id column="company_id" property="roleId" jdbcType="INTEGER" />
+		<result column="authority_type" property="authorityType" jdbcType="TINYINT" />
+	</resultMap>
+
+
+	<insert id="insert" useGeneratedKeys="true" >
+		INSERT INTO
+			pt_company_user_authority
+		(    user_id
+			, company_id
+			, status
+			, authority_type
+		)
+		VALUES
+		(
+			#{userId}
+			,#{companyId}
+			,#{status}
+			,#{authorityType}
+
+		)
+    </insert>
+
+    <delete id="delete" >
+		DELETE FROM pt_company_user_authority
+		WHERE
+	 	user_id = #{userId}
+	 	and company_id = #{companyId}
+	</delete>
+
+
+
+</mapper>

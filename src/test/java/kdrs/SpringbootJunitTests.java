@@ -37,13 +37,13 @@ public class SpringbootJunitTests {
 
 		int id = ptConstructionMapper.insert(ptConstructionRepository);
 
-		Assert.assertNotNull(ptConstructionMapper.selectOne(id));
+		Assert.assertNotNull(ptConstructionMapper.selectOne(3,id));
   }
 
   @Test
   public void testConstruction(){
       System.out.println("testConstruction");
-      List<PtConstructionRepository>  listptConstructionRepository = ptConstructionMapper.selectMany(21, null, null, (byte)2);
+      List<PtConstructionRepository>  listptConstructionRepository = ptConstructionMapper.selectMany(3,21, null, null, (byte)2);
       Assert.assertNull(listptConstructionRepository);
   }
 
