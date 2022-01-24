@@ -10,7 +10,7 @@
 		<result column="sei" property="sei" jdbcType="VARCHAR" />
 		<result column="mei" property="mei" jdbcType="VARCHAR" />
 		<result column="sei_kana" property="seiKana" jdbcType="VARCHAR" />
-
+        <result column="mei_kana" property="meiKana" jdbcType="VARCHAR" />
 		<result column="phone" property="phone" jdbcType="VARCHAR" />
 		<result column="prefacture" property="prefacture" jdbcType="VARCHAR" />
 		<result column="city" property="city" jdbcType="VARCHAR" />

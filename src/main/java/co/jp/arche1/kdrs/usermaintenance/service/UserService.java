@@ -87,7 +87,7 @@ public class UserService extends BaseService {
 			resDt.setMei(pvUserCompanyUserRepository.getMei());
 			resDt.setSei(pvUserCompanyUserRepository.getSei());
 			resDt.setMeiKana(pvUserCompanyUserRepository.getMeiKana());
-			resDt.setSeiKana(pvUserCompanyUserRepository.getMeiKana());
+			resDt.setSeiKana(pvUserCompanyUserRepository.getSeiKana());
 			resDt.setDeleted(pvUserCompanyUserRepository.getDeleted());
 			resDt.setCity(pvUserCompanyUserRepository.getCity());
 			resDt.setPhone(pvUserCompanyUserRepository.getPhone());
@@ -135,7 +135,7 @@ public class UserService extends BaseService {
 		resDt.setMei(pvUserCompanyUserRepository.getMei());
 		resDt.setSei(pvUserCompanyUserRepository.getSei());
 		resDt.setMeiKana(pvUserCompanyUserRepository.getMeiKana());
-		resDt.setSeiKana(pvUserCompanyUserRepository.getMeiKana());
+		resDt.setSeiKana(pvUserCompanyUserRepository.getSeiKana());
 		resDt.setPassword(pvUserCompanyUserRepository.getPassword());
 		// resDt.setDeleted(pvUserCompanyUserRepository.getDeleted());
 		resDt.setCity(pvUserCompanyUserRepository.getCity());
