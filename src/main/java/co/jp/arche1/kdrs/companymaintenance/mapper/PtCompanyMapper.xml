@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="co.jp.arche1.kdrs.companymaintenance.mapper.PtCompanyMapper" >
+	<resultMap id="ptCompanyMap" type="co.jp.arche1.kdrs.companymaintenance.repository.PtCompanyRepository" >
+		<id column="company_id" property="companyId" jdbcType="INTEGER" />
+		<result column="company_code" property="companyCode" jdbcType="VARCHAR" />
+		<result column="company_name" property="companyName" jdbcType="VARCHAR" />
+		<result column="company_name_kana" property="companyNameKana" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="prefecture" property="prefacture" jdbcType="VARCHAR" />
+		<result column="city" property="city" jdbcType="VARCHAR" />
+		<result column="street_number" property="streetNumber" jdbcType="VARCHAR" />
+		<result column="building_name" property="buildingName" jdbcType="VARCHAR" />
+		<result column="deleted" property="deleted" jdbcType="TINYINT" />
+		<result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+		<result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+	</resultMap>
+
+	<select id="selectMany" resultMap="ptCompanyMap" >
+		SELECT
+			company_id, company_code, company_name, company_name_kana,
+			phone, prefacture, city, street_number, building_name, deleted,
+			created_at, updated_at
+		FROM pt_company
+		WHERE deleted = 0 and company_id != #{companyId}
+
+            <if test="companyCode != null">
+				AND company_code like CONCAT('%', #{companyCode},'%')
+	        </if>
+	        <if test="companyName != null">
+	        	AND company_name like CONCAT('%', #{companyName},'%')
+	        </if>
+            <!--  >if test="deleted != null">
+				AND deleted = #{deleted}
+	        </if-->
+
+        GROUP BY company_id;
+    </select>
+
+
+
+    <select id="selectOne" resultMap="ptCompanyMap" >
+		SELECT
+			company_id, company_code, company_name, company_name_kana,
+			phone, prefacture, city, street_number, building_name, deleted,
+			created_at, updated_at
+		FROM pt_company
+         WHERE  company_id = #{companyId}
+    </select>
+
+     <insert id="insert" parameterType="co.jp.arche1.kdrs.companymaintenance.repository.PtCompanyRepository" useGeneratedKeys="true" keyProperty="companyId">
+		INSERT INTO pt_company
+		(
+			company_code,
+			company_name,
+			company_name_kana,
+			phone,
+			prefacture,
+			city,
+			street_number,
+			building_name,
+			deleted,
+			created_at,
+			updated_at
+		)
+		VALUES
+		(
+		    #{companyCode},
+		    #{companyName},
+			#{companyNameKana},
+			#{phone},
+			#{prefacture},
+			#{city},
+			#{streetNumber},
+			#{buildingName},
+			#{deleted},
+			CURRENT_TIMESTAMP,
+			now()
+		)
+    </insert>
+
+    <update id="update">
+		update pt_company
+			<set>
+			    company_code = #{companyCode},
+				company_name = #{companyName},
+				company_name_kana = #{companyNameKana},
+				phone = #{phone},
+				prefacture = #{prefacture},
+				city=#{city},
+				street_number = #{streetNumber},
+				building_name = #{buildingName},
+				updated_at = CURRENT_TIMESTAMP
+           </set>
+			WHERE company_id = #{companyId}
+	</update>
+
+    <delete id="deleteUpdate" >
+		update pt_company
+		<set>
+			deleted = #{deleted},
+		    updated_at = CURRENT_TIMESTAMP
+		</set>
+		WHERE company_id = #{companyId}
+	</delete>
+
+</mapper>
