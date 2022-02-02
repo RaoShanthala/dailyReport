@@ -40,8 +40,13 @@
 			mail = #{email}
 	</select>
 
+	<select id="selectMax"  resultType="int">
+		select COALESCE(MAX(user_id), 0) from pt_user
+		LOCK IN SHARE MODE
+    </select>
+
 	<!-- insert id="insert" parameterType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" useGeneratedKeys="true" keyProperty="user_id" -->
-	<insert id="insert" parameterType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" useGeneratedKeys="true" >
+	<insert id="insert" parameterType="co.jp.arche1.kdrs.usermaintenance.repository.PtUserRepository" useGeneratedKeys="true" keyProperty="userId">
 		INSERT INTO
 			pt_user
 		(

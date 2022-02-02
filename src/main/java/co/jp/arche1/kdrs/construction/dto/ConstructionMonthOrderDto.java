@@ -38,6 +38,7 @@ public class ConstructionMonthOrderDto extends BaseDto{
 		    public RequestHd() {}
 
 			// プロパティ(メンバ変数)の宣言
+		    private Integer companyId;
 			private Integer  constId;
 			private LocalDate startDate;
 			private LocalDate endDate;

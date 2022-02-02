@@ -14,6 +14,7 @@ public interface PtUserMapper {
 	Integer insert(PtUserRepository ptUserRepository);
 	Integer deleteUpdate(@Param("userId") Integer userId,@Param("deleted") Byte deleted);
 	Integer update(PtUserRepository ptUserRepository);
+    Integer selectMax();
 
 
 	//Integer update(PtUserRepository ptUserRepository);
@@ -22,4 +23,6 @@ public interface PtUserMapper {
 	List<PtUserRepository> selecAll(@Param("userId") Integer userId,@Param("loginUser") String loginUser,@Param("userName") String userName);
 
 	List<PtUserRepository> selectMany(@Param("email") String email);
+
+
 }

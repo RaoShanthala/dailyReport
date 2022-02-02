@@ -10,9 +10,11 @@ import lombok.Data;
 public class PvConstructionMonthOrderRepository {
 
 	private Integer privConstId;
+	private Integer companyId;
 	private String privConstName;
 	private Integer userId;
-	private String name;
+	private String sei;
+	private String mei;
 	private Integer orderNo;
 	private String orderCode;
 	private String orderTitle;

@@ -1,10 +1,7 @@
 package co.jp.arche1.kdrs.usermaintenance.dto;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 import co.jp.arche1.kdrs.common.BaseDto;
 import lombok.Data;

@@ -3,10 +3,12 @@
 <mapper namespace="co.jp.arche1.kdrs.construction.mapper.PvConstructionMonthOrderMapper" >
 	<resultMap id="pvOrderPrivConstUserMap" type="co.jp.arche1.kdrs.construction.repository.PvConstructionMonthOrderRepository" >
 	    <id column="order_no" property="orderNo" jdbcType="INTEGER" />
+	    <result column="company_id" property="companyId" jdbcType="INTEGER" />
 		<result column="priv_const_id" property="privConstId" jdbcType="INTEGER" />
 		<result column="priv_const_name" property="privConstName" jdbcType="VARCHAR" />
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
-		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="sei" property="sei" jdbcType="VARCHAR" />
+		<result column="mei" property="mei" jdbcType="VARCHAR" />
 		<result column="order_code" property="orderCode" jdbcType="VARCHAR" />
 		<result column="order_title" property="orderTitle" jdbcType="VARCHAR" />
 		<result column="order_date" property="orderDate" jdbcType="TIMESTAMP" />
@@ -26,11 +28,11 @@
       ord.order_date, ord.order_contents,ord.order_cause,
 	  ord.staff,ord.staff_client, ord.signature,
 	  ord.deleted, ord.created_at, ord.updated_at,
-      priv.priv_const_name, priv.user_id, user.name FROM pt_order ord
+      priv.priv_const_name, priv.user_id, user.sei, user.mei FROM pt_order ord
       left join pt_privConst priv on priv.priv_const_id = ord.priv_const_id
       left join pt_user user on priv.user_id  = user.user_id
 
-      WHERE priv.const_id =#{constId}
+      WHERE priv.const_id =#{constId} and priv.company_id = #{companyId}
        and ord.order_date <![CDATA[ >= ]]>  #{startDate}
       <if test="endDate != null">
         AND ord.order_date <![CDATA[ <= ]]>  #{endDate}

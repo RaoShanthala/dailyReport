@@ -39,6 +39,7 @@ public class ConstructionMonthReportDto extends BaseDto{
 		    public RequestHd() {}
 
 			// プロパティ(メンバ変数)の宣言
+		    private Integer companyId;
 			private Integer  constId;
 			private LocalDate startDate;
 			private LocalDate endDate;
@@ -54,6 +55,7 @@ public class ConstructionMonthReportDto extends BaseDto{
 
 			// プロパティ(メンバ変数)の宣言
 		    private Integer privConstId;
+		    private Integer companyId;
 			//private String privConstCode;
 			private String privConstName;
 			private Integer userId;

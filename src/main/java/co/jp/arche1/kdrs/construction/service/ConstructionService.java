@@ -408,7 +408,7 @@ public class ConstructionService extends BaseService {
 
 		ConstructionMonthReportDto.RequestHd reqHd = constructionMonthReportDto.getReqHd();
 		List<PvConstructionMonthReportRepository> listPvConstructionMonthReportRepository = pvConstructionMonthReportMapper
-				.selectMany(reqHd.getConstId(), reqHd.getStartDate(), reqHd.getEndDate(), reqHd.getDeleted());
+				.selectMany(reqHd.getCompanyId(),reqHd.getConstId(), reqHd.getStartDate(), reqHd.getEndDate(), reqHd.getDeleted());
 
 		List<ConstructionMonthReportDto.ResponseDt> listResDt = constructionMonthReportDto.getResDt();
 		for (Iterator<PvConstructionMonthReportRepository> it = listPvConstructionMonthReportRepository.iterator(); it
@@ -418,8 +418,9 @@ public class ConstructionService extends BaseService {
 			ConstructionMonthReportDto.ResponseDt resDt = new ConstructionMonthReportDto.ResponseDt();
 			resDt.setPrivConstId(pvConstructionMonthReportRepository.getPrivConstId());
 			resDt.setPrivConstName(pvConstructionMonthReportRepository.getPrivConstName());
+			resDt.setCompanyId(pvConstructionMonthReportRepository.getCompanyId());
 			resDt.setUserId(pvConstructionMonthReportRepository.getUserId());
-			resDt.setUserName(pvConstructionMonthReportRepository.getName());
+			resDt.setUserName(pvConstructionMonthReportRepository.getSei() + " " +pvConstructionMonthReportRepository.getMei());
 			resDt.setReportNo(pvConstructionMonthReportRepository.getReportNo());
 			resDt.setReportCode(pvConstructionMonthReportRepository.getReportCode());
 			resDt.setPersonCode(pvConstructionMonthReportRepository.getPersonCode());
@@ -459,7 +460,7 @@ public class ConstructionService extends BaseService {
 
 		ConstructionMonthOrderDto.RequestHd reqHd = constructionMonthOrderDto.getReqHd();
 		List<PvConstructionMonthOrderRepository> listPvConstructionMonthOrderRepository = pvConstructionMonthOrderMapper
-				.selectMany(reqHd.getConstId(), reqHd.getStartDate(), reqHd.getEndDate(), reqHd.getDeleted());
+				.selectMany(reqHd.getCompanyId(), reqHd.getConstId(), reqHd.getStartDate(), reqHd.getEndDate(), reqHd.getDeleted());
 
 		List<ConstructionMonthOrderDto.ResponseDt> listResDt = constructionMonthOrderDto.getResDt();
 		for (Iterator<PvConstructionMonthOrderRepository> it = listPvConstructionMonthOrderRepository.iterator(); it
@@ -470,7 +471,7 @@ public class ConstructionService extends BaseService {
 			resDt.setPrivConstId(pvConstructionMonthOrderRepository.getPrivConstId());
 			resDt.setPrivConstName(pvConstructionMonthOrderRepository.getPrivConstName());
 			resDt.setUserId(pvConstructionMonthOrderRepository.getUserId());
-			resDt.setUserName(pvConstructionMonthOrderRepository.getName());
+			resDt.setUserName(pvConstructionMonthOrderRepository.getSei() + " " + pvConstructionMonthOrderRepository.getMei() );
 			resDt.setOrderNo(pvConstructionMonthOrderRepository.getOrderNo());
 			resDt.setOrderCode(pvConstructionMonthOrderRepository.getOrderCode());
 			resDt.setOrderTitle(pvConstructionMonthOrderRepository.getOrderTitle());

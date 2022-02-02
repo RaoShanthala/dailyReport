@@ -6,7 +6,9 @@
 		<result column="priv_const_id" property="privConstId" jdbcType="INTEGER" />
 		<result column="priv_const_name" property="privConstName" jdbcType="VARCHAR" />
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
-		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="company_id" property="companyId" jdbcType="INTEGER" />
+		<result column="sei" property="sei" jdbcType="VARCHAR" />
+		<result column="mei" property="mei" jdbcType="VARCHAR" />
 		<result column="report_code" property="reportCode" jdbcType="VARCHAR" />
 		<result column="person_code" property="personCode" jdbcType="VARCHAR" />
 		<result column="report_date" property="reportDate" jdbcType="TIMESTAMP" />
@@ -28,11 +30,11 @@
       report.report_date, report.detail, report.const_type,
 	  report.staff,report.num_person, report.hours, report.early_hours, report.over_hours,
 	  report.deleted, report.created_at, report.updated_at,
-      priv.priv_const_name, priv.user_id, user.name FROM pt_report report
+      priv.priv_const_name, priv.user_id, priv.company_id,user.sei, user.mei FROM pt_report report
       left join pt_privConst priv on priv.priv_const_id = report.priv_const_id
       left join pt_user user on priv.user_id  = user.user_id
 
-      WHERE priv.const_id =#{constId}
+      WHERE priv.const_id =#{constId} and priv.company_id = #{companyId}
        and report.report_date <![CDATA[ >= ]]>  #{startDate}
       <if test="endDate != null">
           AND report.report_date <![CDATA[ <= ]]>  #{endDate}

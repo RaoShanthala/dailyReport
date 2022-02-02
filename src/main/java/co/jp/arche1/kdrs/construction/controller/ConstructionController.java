@@ -229,7 +229,7 @@ public class ConstructionController {
 	@RequestMapping(value = "/Construction/ReferConstructionMonthReportMany", method = RequestMethod.GET)
 	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public ConstructionMonthReportDto referConstructionMonthReportMany(
-			//@RequestParam(name = "companyId", required = true) Integer companyId,
+			@RequestParam(name = "companyId", required = true) Integer companyId,
 			@RequestParam(name = "constId", required = true) Integer constId,
 			 @RequestParam(name = "startDate", required = true) @DateTimeFormat(iso =
 			 DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -242,7 +242,7 @@ public class ConstructionController {
 
 		ConstructionMonthReportDto constructionMonthReportDto = new ConstructionMonthReportDto();
 		ConstructionMonthReportDto.RequestHd regHd = constructionMonthReportDto.getReqHd();
-
+		regHd.setCompanyId(companyId);
 		regHd.setConstId(constId);
 		regHd.setStartDate(startDate);
 		regHd.setEndDate(endDate);
@@ -264,6 +264,7 @@ public class ConstructionController {
 	@RequestMapping(value = "/Construction/ReferConstructionMonthOrderMany", method = RequestMethod.GET)
 	//@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
 	public ConstructionMonthOrderDto referConstructionMonthOrderMany(
+			@RequestParam(name = "companyId", required = true) Integer companyId,
 			@RequestParam(name = "constId", required = true) Integer constId,
 			@RequestParam(name = "startDate", required = true) @DateTimeFormat(iso =
 			 DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -276,7 +277,7 @@ public class ConstructionController {
 
 		ConstructionMonthOrderDto constructionMonthOrderDto = new ConstructionMonthOrderDto();
 		ConstructionMonthOrderDto.RequestHd regHd = constructionMonthOrderDto.getReqHd();
-
+		regHd.setCompanyId(companyId);
 		regHd.setConstId(constId);
 		regHd.setStartDate(startDate);
 		regHd.setEndDate(endDate);

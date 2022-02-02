@@ -11,7 +11,8 @@ import co.jp.arche1.kdrs.construction.repository.PvConstructionMonthOrderReposit
 @Mapper
 public interface PvConstructionMonthOrderMapper {
 
-	List<PvConstructionMonthOrderRepository> selectMany(@Param("constId") Integer constId,
+	List<PvConstructionMonthOrderRepository> selectMany(@Param("companyId") Integer companyId,
+			@Param("constId") Integer constId,
 			@Param("startDate") LocalDate startDate,
 			@Param("endDate") LocalDate endDate,
 			@Param("deleted") byte deleted);

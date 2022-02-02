@@ -7,7 +7,7 @@
 		<result column="company_name" property="companyName" jdbcType="VARCHAR" />
 		<result column="company_name_kana" property="companyNameKana" jdbcType="VARCHAR" />
 		<result column="phone" property="phone" jdbcType="VARCHAR" />
-		<result column="prefecture" property="prefacture" jdbcType="VARCHAR" />
+		<result column="prefacture" property="prefacture" jdbcType="VARCHAR" />
 		<result column="city" property="city" jdbcType="VARCHAR" />
 		<result column="street_number" property="streetNumber" jdbcType="VARCHAR" />
 		<result column="building_name" property="buildingName" jdbcType="VARCHAR" />

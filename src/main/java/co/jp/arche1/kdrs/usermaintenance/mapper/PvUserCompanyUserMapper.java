@@ -19,5 +19,9 @@ public interface PvUserCompanyUserMapper {
 	List<PvUserCompanyUserRepository> selectOneUser(@Param("companyId") Integer companyId,
 			@Param("userId") Integer userId);
 
+	List<PvUserCompanyUserRepository> selectManyAdmins(@Param("companyId") Integer companyId,
+			@Param("sei") String sei,
+			@Param("mei") String mei);
+
 
 }
