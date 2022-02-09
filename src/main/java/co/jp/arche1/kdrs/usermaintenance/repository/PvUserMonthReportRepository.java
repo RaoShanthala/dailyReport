@@ -14,7 +14,8 @@ public class PvUserMonthReportRepository {
 	private Integer privConstId;
 	private String privConstName;
 	private Integer userId;
-	private String name;
+	private String sei;
+	private String mei;
 	private Integer reportNo;
 	private String reportCode;
 	private String personCode;

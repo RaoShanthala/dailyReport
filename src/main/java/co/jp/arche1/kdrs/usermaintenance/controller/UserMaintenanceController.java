@@ -1,12 +1,15 @@
 package co.jp.arche1.kdrs.usermaintenance.controller;
 
 
+import java.time.LocalDate;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.beans.propertyeditors.CustomDateEditor;
 //import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.context.MessageSource;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 //import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import co.jp.arche1.kdrs.usermaintenance.dto.IppanUserSearchDto;
 import co.jp.arche1.kdrs.usermaintenance.dto.UserDeleteDto;
 import co.jp.arche1.kdrs.usermaintenance.dto.UserInsertDto;
 import co.jp.arche1.kdrs.usermaintenance.dto.UserMonthOrderDto;
@@ -54,6 +58,29 @@ public class UserMaintenanceController {
 
 		return roleSearchAllDto;
 	} */
+	// ユーザ明細検索 (Only ippan Users)
+	@RequestMapping(value = "/UserMaintenance/ReferIppanUserMany", method = RequestMethod.GET)
+	public IppanUserSearchDto referIppanUserMany(
+			@RequestParam(name = "companyId", required = true) Integer companyId,
+			@RequestParam(name = "sei", required = false) String sei,
+			@RequestParam(name = "mei", required = false) String mei,
+			@RequestParam(name = "deleted", required = false) Byte deleted) throws Exception {
+
+		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
+
+		IppanUserSearchDto ippanUserSearchDto = new IppanUserSearchDto();
+		IppanUserSearchDto.RequestHd regHd = ippanUserSearchDto.getReqHd();
+
+		regHd.setCompanyId(companyId);
+		regHd.setSei(sei);
+		regHd.setMei(mei);
+		regHd.setDeleted(deleted);
+
+		userService.searchManyIppanUsers(ippanUserSearchDto);
+
+		return ippanUserSearchDto;
+
+	}
 
 	// ユーザ明細検索
 	@RequestMapping(value = "/UserMaintenance/ReferUserMany", method = RequestMethod.GET)
@@ -148,23 +175,21 @@ public class UserMaintenanceController {
 
 	// 社員月別日報一覧 UserMonthReport
 	@RequestMapping(value = "/User/ReferUserMonthReportMany", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
-	public UserMonthReportDto referUserMonthReportMany(@RequestParam(name = "userId", required = true) Integer userId,
-			@RequestParam(name = "userName", required = false) String userName,
-			// @RequestParam(name = "startDate", required = true) @DateTimeFormat(iso =
-			// DateTimeFormat.ISO.DATE) LocalDate startDate,
-			// @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso =
-			// DateTimeFormat.ISO.DATE) LocalDate eDate,
-			@RequestParam(name = "startDate", required = true) Integer startDate,
-			@RequestParam(name = "endDate", required = false) Integer endDate,
+	public UserMonthReportDto referUserMonthReportMany(@RequestParam(name = "companyId", required = true) Integer companyId,
+			@RequestParam(name = "userId", required = true) Integer userId,
+			@RequestParam(name = "constId", required = false) Integer constId,
+			 @RequestParam(name = "startDate", required = true) @DateTimeFormat(iso =
+			 DateTimeFormat.ISO.DATE) LocalDate startDate,
+			 @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso =
+			 DateTimeFormat.ISO.DATE) LocalDate endDate,
 			@RequestParam(name = "deleted", required = false) String deleted) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		UserMonthReportDto userMonthReportDto = new UserMonthReportDto();
 		UserMonthReportDto.RequestHd regHd = userMonthReportDto.getReqHd();
-
+		regHd.setCompanyId(companyId);
 		regHd.setUserId(userId);
-		regHd.setUserName(userName);
+		regHd.setConstId(constId);
 		regHd.setStartDate(startDate);
 		regHd.setEndDate(endDate);
 		if (deleted != null) {
@@ -182,23 +207,22 @@ public class UserMaintenanceController {
 
 	// 社員月別作業一覧 UserMonthOrder
 	@RequestMapping(value = "/User/ReferUserMonthOrderMany", method = RequestMethod.GET)
-	@PreAuthorize("hasRole('PM_ADMIN') or hasRole('PM_USER') or hasRole('PM_GUEST')")
-	public UserMonthOrderDto referUserMonthOrderMany(@RequestParam(name = "userId", required = true) Integer userId,
-			@RequestParam(name = "userName", required = false) String userName,
-			// @RequestParam(name = "startDate", required = true) @DateTimeFormat(iso =
-			// DateTimeFormat.ISO.DATE) LocalDate startDate,
-			// @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso =
-			// DateTimeFormat.ISO.DATE) LocalDate eDate,
-			@RequestParam(name = "startDate", required = true) Integer startDate,
-			@RequestParam(name = "endDate", required = false) Integer endDate,
+	public UserMonthOrderDto referUserMonthOrderMany(@RequestParam(name = "companyId", required = true) Integer companyId,
+			@RequestParam(name = "userId", required = true) Integer userId,
+			@RequestParam(name = "constId", required = false) Integer constId,
+			 @RequestParam(name = "startDate", required = true) @DateTimeFormat(iso =
+			 DateTimeFormat.ISO.DATE) LocalDate startDate,
+			 @RequestParam(name = "endDate", required = false) @DateTimeFormat(iso =
+			 DateTimeFormat.ISO.DATE) LocalDate endDate,
 			@RequestParam(name = "deleted", required = false) String deleted) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		UserMonthOrderDto userMonthOrderDto = new UserMonthOrderDto();
 		UserMonthOrderDto.RequestHd regHd = userMonthOrderDto.getReqHd();
 
+		regHd.setCompanyId(companyId);
 		regHd.setUserId(userId);
-		regHd.setUserName(userName);
+		regHd.setConstId(constId);
 		regHd.setStartDate(startDate);
 		regHd.setEndDate(endDate);
 		if (deleted != null) {

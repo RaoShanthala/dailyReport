@@ -9,7 +9,8 @@
 		<result column="priv_const_id" property="privConstId" jdbcType="INTEGER" />
 		<result column="priv_const_name" property="privConstName" jdbcType="VARCHAR" />
 		<result column="user_id" property="userId" jdbcType="INTEGER" />
-		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="sei" property="sei" jdbcType="VARCHAR" />
+		<result column="mei" property="mei" jdbcType="VARCHAR" />
 		<result column="report_code" property="reportCode" jdbcType="VARCHAR" />
 		<result column="person_code" property="personCode" jdbcType="VARCHAR" />
 		<result column="report_date" property="reportDate" jdbcType="TIMESTAMP" />
@@ -31,15 +32,15 @@
       report.report_date, report.detail, report.const_type,
 	  report.staff,report.num_person, report.hours, report.early_hours, report.over_hours,
 	  report.deleted, report.created_at, report.updated_at,
-      priv.priv_const_name, priv.user_id, user.name, const.const_id, const.const_name
+      priv.priv_const_name, priv.user_id, user.sei, user.mei,const.const_id, const.const_name
       FROM pt_report report
       left join pt_privConst priv on priv.priv_const_id = report.priv_const_id
       left join pt_user user on priv.user_id  = user.user_id
       left join pt_construction const on priv.const_id = const.const_id
 
-      WHERE priv.user_id = #{userId}
-      <if test="userName != null">
-          AND user.name = #{userName}
+      WHERE priv.user_id = #{userId} and priv.company_id = #{companyId}
+      <if test="constId != 0">
+          AND priv.const_id = #{constId}
        </if>
        and report.report_date <![CDATA[ >= ]]>  #{startDate}
       <if test="endDate != null">

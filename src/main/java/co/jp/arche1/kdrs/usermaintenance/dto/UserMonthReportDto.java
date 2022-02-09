@@ -1,6 +1,7 @@
 package co.jp.arche1.kdrs.usermaintenance.dto;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,10 +39,11 @@ public class UserMonthReportDto extends BaseDto{
 		    public RequestHd() {}
 
 			// プロパティ(メンバ変数)の宣言
+		    private Integer companyId;
 			private Integer  userId;
-			private String userName;
-			private Integer startDate;
-			private Integer endDate;
+			private Integer constId;
+			private LocalDate startDate;
+			private LocalDate endDate;
 			private Byte deleted;
 		}
 		@Data

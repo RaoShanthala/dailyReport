@@ -21,6 +21,8 @@ public interface PtConstructionMapper {
 			@Param("targetStartDt") LocalDate targetStartDate,
 			@Param("targetEndDt") LocalDate targetEndDate );
 
+	List<PtConstructionRepository> selectConstIdCode(@Param("companyId") Integer companyId);
+
 	PtConstructionRepository selectOne(@Param("companyId") Integer companyId,@Param("constId") Integer constId);
 
 	Integer delete(@Param("companyId") Integer companyId,@Param("constId") Integer constId);

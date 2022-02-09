@@ -45,8 +45,9 @@ public class AdminService extends BaseService {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		AdminSearchManyDto.RequestHd reqHd = adminSearchManyDto.getReqHd();
-		List<PvUserCompanyUserRepository> listPvUserCompanyUserRepository = pvUserCompanyUserMapper
-				.selectManyAdmins(reqHd.getCompanyId(), reqHd.getSei(), reqHd.getMei());
+		//get only active admins (not deleted)
+		List<PvUserCompanyUserRepository> listPvUserCompanyUserRepository = pvUserCompanyUserMapper.selectManyUsers
+				(reqHd.getCompanyId(), reqHd.getSei(), reqHd.getMei(),(byte)0, (byte)2 , (byte)0);
 
 		List<AdminSearchManyDto.ResponseDt> listResDt = adminSearchManyDto.getResDt();
 

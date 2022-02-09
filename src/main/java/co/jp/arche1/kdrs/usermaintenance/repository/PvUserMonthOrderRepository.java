@@ -14,7 +14,8 @@ public class PvUserMonthOrderRepository {
 	private Integer privConstId;
 	private String privConstName;
 	private Integer userId;
-	private String name;
+	private String sei;
+	private String mei;
 	private Integer orderNo;
 	private String orderCode;
 	private String orderTitle;

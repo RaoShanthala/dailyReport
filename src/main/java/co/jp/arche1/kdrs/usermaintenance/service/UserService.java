@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import co.jp.arche1.kdrs.common.BaseService;
 import co.jp.arche1.kdrs.common.exception.OptimisticLockException;
+import co.jp.arche1.kdrs.usermaintenance.dto.IppanUserSearchDto;
 import co.jp.arche1.kdrs.usermaintenance.dto.UserDeleteDto;
 import co.jp.arche1.kdrs.usermaintenance.dto.UserInsertDto;
 import co.jp.arche1.kdrs.usermaintenance.dto.UserMonthOrderDto;
@@ -54,14 +55,65 @@ public class UserService extends BaseService {
 	@Autowired
 	PvUserCompanyUserMapper pvUserCompanyUserMapper;
 
+	public void searchManyIppanUsers(IppanUserSearchDto ippanUserSearchDto) throws Exception{
+		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
+
+		IppanUserSearchDto.RequestHd reqHd = ippanUserSearchDto.getReqHd();
+		//if deleted = 1, only then deleted users will be added
+		List<PvUserCompanyUserRepository> listPvUserCompanyUserRepository = pvUserCompanyUserMapper.selectManyUsers(
+				reqHd.getCompanyId(), reqHd.getSei(), reqHd.getMei(), (byte)0, (byte)3, reqHd.getDeleted());
+		List<IppanUserSearchDto.ResponseDt> listResDt = ippanUserSearchDto.getResDt();
+
+		for (Iterator<PvUserCompanyUserRepository> it = listPvUserCompanyUserRepository.iterator(); it.hasNext();) {
+			PvUserCompanyUserRepository pvUserCompanyUserRepository = it.next();
+			// listtrnActorSearchResDt.add(convertTranActorSearchResDt(rdbActor));
+
+			IppanUserSearchDto.ResponseDt resDt = new IppanUserSearchDto.ResponseDt();
+			resDt.setAuthorityName(pvUserCompanyUserRepository.getAuthorityName());
+
+			resDt.setUserId(pvUserCompanyUserRepository.getUserId());
+			resDt.setCompanyId(pvUserCompanyUserRepository.getCompanyId());
+			if (StringUtils.isNotEmpty(pvUserCompanyUserRepository.getEmail())) {
+				resDt.setEmail(pvUserCompanyUserRepository.getEmail());
+			}
+			resDt.setMei(pvUserCompanyUserRepository.getMei());
+			resDt.setSei(pvUserCompanyUserRepository.getSei());
+			resDt.setMeiKana(pvUserCompanyUserRepository.getMeiKana());
+			resDt.setSeiKana(pvUserCompanyUserRepository.getSeiKana());
+			// resDt.setDeleted(pvUserCompanyUserRepository.getDeleted());
+			resDt.setCity(pvUserCompanyUserRepository.getCity());
+			resDt.setPhone(pvUserCompanyUserRepository.getPhone());
+			resDt.setPrefacture(pvUserCompanyUserRepository.getPrefacture());
+			resDt.setStreetNumber(pvUserCompanyUserRepository.getStreetNumber());
+			resDt.setBuildingName(pvUserCompanyUserRepository.getBuildingName());
+			resDt.setCreatedAt(pvUserCompanyUserRepository.getCreatedAt());
+			resDt.setUpdatedAt(pvUserCompanyUserRepository.getUpdatedAt());
+
+			listResDt.add(resDt);
+		}
+
+		makeResponseTitle(ippanUserSearchDto);
+
+		if (listResDt.size() > 0) {
+			ippanUserSearchDto.setResultCode("000");
+		} else {
+			ippanUserSearchDto.setResultCode("001");
+		}
+		return;
+
+
+
+	}
+
 	// ユーザ明細検索
 	// @Transactional(readOnly = true)
 	public void searchMany(UserSearchManyDto userSearchManyDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
 		UserSearchManyDto.RequestHd reqHd = userSearchManyDto.getReqHd();
+		//if deleted = 1, only then deleted users will be added
 		List<PvUserCompanyUserRepository> listPvUserCompanyUserRepository = pvUserCompanyUserMapper.selectManyUsers(
-				reqHd.getCompanyId(), reqHd.getSei(), reqHd.getMei(), reqHd.getStatus(), reqHd.getDeleted());
+				reqHd.getCompanyId(), reqHd.getSei(), reqHd.getMei(), reqHd.getStatus(),(byte)0, reqHd.getDeleted());
 
 		List<UserSearchManyDto.ResponseDt> listResDt = userSearchManyDto.getResDt();
         int prevUserId = 0;
@@ -331,7 +383,8 @@ public class UserService extends BaseService {
 
 		UserMonthReportDto.RequestHd reqHd = userMonthReportDto.getReqHd();
 		List<PvUserMonthReportRepository> listPvUserMonthReportRepository = pvUserMonthReportMapper.selectMany(
-				reqHd.getUserId(), reqHd.getUserName(), reqHd.getStartDate(), reqHd.getEndDate(), reqHd.getDeleted());
+				reqHd.getCompanyId(),reqHd.getUserId(), reqHd.getConstId(),
+				reqHd.getStartDate(), reqHd.getEndDate(), reqHd.getDeleted());
 
 		List<UserMonthReportDto.ResponseDt> listResDt = userMonthReportDto.getResDt();
 		for (Iterator<PvUserMonthReportRepository> it = listPvUserMonthReportRepository.iterator(); it.hasNext();) {
@@ -343,7 +396,7 @@ public class UserService extends BaseService {
 			resDt.setPrivConstId(pvUserMonthReportRepository.getPrivConstId());
 			resDt.setPrivConstName(pvUserMonthReportRepository.getPrivConstName());
 			resDt.setUserId(pvUserMonthReportRepository.getUserId());
-			resDt.setUserName(pvUserMonthReportRepository.getName());
+			resDt.setUserName(pvUserMonthReportRepository.getSei() + " " + pvUserMonthReportRepository.getMei());
 			resDt.setReportNo(pvUserMonthReportRepository.getReportNo());
 			resDt.setReportCode(pvUserMonthReportRepository.getReportCode());
 			resDt.setPersonCode(pvUserMonthReportRepository.getPersonCode());
@@ -383,7 +436,8 @@ public class UserService extends BaseService {
 
 		UserMonthOrderDto.RequestHd reqHd = userMonthOrderDto.getReqHd();
 		List<PvUserMonthOrderRepository> listPvUserMonthOrderRepository = pvUserMonthOrderMapper.selectMany(
-				reqHd.getUserId(), reqHd.getUserName(), reqHd.getStartDate(), reqHd.getEndDate(), reqHd.getDeleted());
+				reqHd.getCompanyId(), reqHd.getUserId(), reqHd.getConstId(),
+				reqHd.getStartDate(), reqHd.getEndDate(), reqHd.getDeleted());
 
 		List<UserMonthOrderDto.ResponseDt> listResDt = userMonthOrderDto.getResDt();
 		for (Iterator<PvUserMonthOrderRepository> it = listPvUserMonthOrderRepository.iterator(); it.hasNext();) {
@@ -395,7 +449,7 @@ public class UserService extends BaseService {
 			resDt.setPrivConstId(pvUserMonthOrderRepository.getPrivConstId());
 			resDt.setPrivConstName(pvUserMonthOrderRepository.getPrivConstName());
 			resDt.setUserId(pvUserMonthOrderRepository.getUserId());
-			resDt.setUserName(pvUserMonthOrderRepository.getName());
+			resDt.setUserName(pvUserMonthOrderRepository.getSei() + " " + pvUserMonthOrderRepository.getMei());
 			resDt.setOrderNo(pvUserMonthOrderRepository.getOrderNo());
 			resDt.setOrderCode(pvUserMonthOrderRepository.getOrderCode());
 			resDt.setOrderTitle(pvUserMonthOrderRepository.getOrderTitle());

@@ -14,14 +14,12 @@ public interface PvUserCompanyUserMapper {
 			@Param("sei") String sei,
 			@Param("mei") String mei,
 			@Param("status") byte status,
+			@Param("authorityType") byte authorityType,
 			@Param("deleted") byte deleted);
 
 	List<PvUserCompanyUserRepository> selectOneUser(@Param("companyId") Integer companyId,
 			@Param("userId") Integer userId);
 
-	List<PvUserCompanyUserRepository> selectManyAdmins(@Param("companyId") Integer companyId,
-			@Param("sei") String sei,
-			@Param("mei") String mei);
 
 
 }

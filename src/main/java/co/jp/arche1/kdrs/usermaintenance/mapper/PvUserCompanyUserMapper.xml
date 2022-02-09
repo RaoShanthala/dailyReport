@@ -76,11 +76,14 @@
 	    left join pt_authority auth on auth.authority_type = compuserauth.authority_type
 		WHERE
 		   compuser.company_id = #{companyId}
-		   AND user.deleted = 0
+		   <if test="authorityType != 0">
+				AND compuserauth.authority_type = #{authorityType}
+	        </if>
 			 <if test="status != 0">
 				AND compuserauth.status = #{status}
 	        </if>
-	         <if test="deleted == 1">
+	         AND user.deleted = 0
+	         <if test="deleted != null and deleted == 1">
 				OR user.deleted= 1
 	        </if>
 	        <if test="sei != null">
@@ -89,41 +92,8 @@
 	        <if test="mei != null">
 	            AND user.mei LIKE CONCAT('%', #{mei}, '%')
 	        </if>
+
 	     order by user.user_id
 	</select>
-
-	<select id="selectManyAdmins" resultMap="ptuserMap" >
-		SELECT
-			user.user_id,
-			mail as email,
-			sei,
-			mei,
-			sei_kana,
-			mei_kana,
-			phone,
-			prefacture,
-			city,
-			street_number,
-			building_name,
-			compuser.company_id,
-			auth.name as authority_name
-		FROM
-			pt_user user
-	    Left join pt_company_user compuser on compuser.user_id = user.user_id
-	    left join pt_company_user_authority compuserauth on compuser.user_id   = compuserauth.user_id and compuser.company_id = compuserauth.company_id
-	    left join pt_authority auth on auth.authority_type = compuserauth.authority_type
-		WHERE
-		   compuser.company_id = #{companyId}
-		   AND user.deleted = 0 AND compuserauth.authority_type = 2
-	        <if test="sei != null">
-	            AND user.sei LIKE CONCAT('%', #{sei}, '%')
-	        </if>
-	        <if test="mei != null">
-	            AND user.mei LIKE CONCAT('%', #{mei}, '%')
-	        </if>
-	     order by user.user_id
-	</select>
-
-
 
 </mapper>

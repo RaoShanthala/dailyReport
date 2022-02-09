@@ -18,6 +18,7 @@ import co.jp.arche1.kdrs.construction.dto.ConstructionInsertDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionListDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionMonthOrderDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionMonthReportDto;
+import co.jp.arche1.kdrs.construction.dto.ConstructionSearchManyDto;
 //import co.jp.arche1.kdrs.construction.dto.ConstructionSearchManyDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionSearchOneDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionUpdateDto;
@@ -107,50 +108,35 @@ public class ConstructionService extends BaseService {
 		return;
 	}
 
-	/*public void searchManyConstruction(ConstructionSearchManyDto constructionSearchManyDto) throws Exception {
+	public void getConstList(ConstructionListDto constructionListDto) throws Exception {
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
 
-		ConstructionSearchManyDto.RequestHd reqHd = constructionSearchManyDto.getReqHd();
+		ConstructionListDto.RequestHd reqHd = constructionListDto.getReqHd();
 		List<PtConstructionRepository> listPtConstructionRepository = ptConstructionMapper
-				.selectMany(reqHd.getConstId(), reqHd.getConstCode(), reqHd.getConstName(), reqHd.getDeleted());
+				.selectConstIdCode(reqHd.getCompanyId());
 
 		// List<PtPrivconstRepository> listPtPricconstRepository =
 		// ptPrivconstMapper.selectMany(0,0,(byte)0);
 
-		List<ConstructionSearchManyDto.ResponseDt> listResDt = constructionSearchManyDto.getResDt();
+		List<ConstructionListDto.ResponseDt> listResDt = constructionListDto.getResDt();
 		for (Iterator<PtConstructionRepository> it = listPtConstructionRepository.iterator(); it.hasNext();) {
 			PtConstructionRepository ptConstructionRepository = it.next();
 
-			ConstructionSearchManyDto.ResponseDt resDt = new ConstructionSearchManyDto.ResponseDt();
+			ConstructionListDto.ResponseDt resDt = new ConstructionListDto.ResponseDt();
 			resDt.setConstId(ptConstructionRepository.getConstId());
 			resDt.setConstCode(ptConstructionRepository.getConstCode());
-			resDt.setConstName(ptConstructionRepository.getConstName());
-			resDt.setUserId(ptConstructionRepository.getUserId());
-			resDt.setStartDate(ptConstructionRepository.getStartDate());
-			resDt.setEndDate(ptConstructionRepository.getEndDate());
-			resDt.setCreatedAt(ptConstructionRepository.getCreatedAt());
-			resDt.setUpdatedAt(ptConstructionRepository.getUpdatedAt());
-			if (ptConstructionRepository.getDeleted() == (byte) 0) {
-				resDt.setDeleted("FALSE");
-			} else if (ptConstructionRepository.getDeleted() == (byte) 1) {
-				resDt.setDeleted("TRUE");
-			}
 			listResDt.add(resDt);
 		}
 
-		makeResponseTitle(constructionSearchManyDto);
-
-		if (reqHd.getDeleted() == (byte) 2) {
-			reqHd.setDeleted(null);
-		}
+		makeResponseTitle(constructionListDto);
 
 		if (listResDt.size() > 0) {
-			constructionSearchManyDto.setResultCode("000");
+			constructionListDto.setResultCode("000");
 		} else {
-			constructionSearchManyDto.setResultCode("001");
+			constructionListDto.setResultCode("001");
 		}
 		return;
-	} */
+	}
 
 	public void searchConstructionList(ConstructionListDto constructionListDto) throws Exception{
 		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());

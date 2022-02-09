@@ -20,6 +20,7 @@ import co.jp.arche1.kdrs.construction.dto.ConstructionInsertDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionListDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionMonthOrderDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionMonthReportDto;
+import co.jp.arche1.kdrs.construction.dto.ConstructionSearchManyDto;
 //import co.jp.arche1.kdrs.construction.dto.ConstructionSearchManyDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionSearchOneDto;
 import co.jp.arche1.kdrs.construction.dto.ConstructionUpdateDto;
@@ -92,6 +93,21 @@ public class ConstructionController {
 		constructionService.searchManyConstruction(constructionSearchManyDto);
 		return constructionSearchManyDto;
 	} */
+
+	//user in userMonthlyReport and userMontlyOrder
+	@RequestMapping(value = "/Construction/GetConstList", method = RequestMethod.GET)
+	public ConstructionListDto getConstList(
+			@RequestParam(name = "companyId", required = true) Integer companyId)throws Exception {
+		logger.debug(this.getClass().getName() + "." + Thread.currentThread().getStackTrace()[1].getMethodName());
+		ConstructionListDto constructionListDto = new ConstructionListDto();
+		ConstructionListDto.RequestHd regHd = constructionListDto.getReqHd();
+
+		regHd.setCompanyId(companyId);
+
+		constructionService.getConstList(constructionListDto);
+
+		return constructionListDto;
+	}
 
 	// 工事明細検索
 	@RequestMapping(value = "/Construction/ReferConstructionList", method = RequestMethod.GET)

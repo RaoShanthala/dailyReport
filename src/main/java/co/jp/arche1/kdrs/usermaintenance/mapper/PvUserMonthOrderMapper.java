@@ -1,5 +1,6 @@
 package co.jp.arche1.kdrs.usermaintenance.mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -10,10 +11,12 @@ import co.jp.arche1.kdrs.usermaintenance.repository.PvUserMonthOrderRepository;
 @Mapper
 public interface PvUserMonthOrderMapper {
 
-	List<PvUserMonthOrderRepository> selectMany(@Param("userId") Integer userId,
-			@Param("userName") String userName,
-			@Param("startDate") Integer startDate,
-			@Param("endDate") Integer endDate,
+	List<PvUserMonthOrderRepository> selectMany(
+			@Param("companyId") Integer companyId,
+			@Param("userId") Integer userId,
+			@Param("constId") Integer constId,
+			@Param("startDate") LocalDate startDate,
+			@Param("endDate") LocalDate endDate,
 			@Param("deleted") byte deleted);
 
 }

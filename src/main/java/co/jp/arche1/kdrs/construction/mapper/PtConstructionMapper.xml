@@ -36,6 +36,15 @@
         GROUP BY const_id;
     </select>
 
+    <select id="selectConstIdCode" resultMap="ptConstructionMap" >
+		SELECT
+		 const_id, const_code
+	    FROM pt_construction
+        WHERE company_id = #{companyId} AND deleted = 0
+       ORDER BY const_id;
+    </select>
+
+
     <select id="selectList" resultMap="ptConstructionMap">
 		SELECT
 			company_id, const_id, const_code, const_name,  deleted,
