@@ -31,7 +31,7 @@
 	  report.staff,report.num_person, report.hours, report.early_hours, report.over_hours,
 	  report.deleted, report.created_at, report.updated_at,
       priv.priv_const_name, priv.user_id, priv.company_id,user.sei, user.mei FROM pt_report report
-      left join pt_privConst priv on priv.priv_const_id = report.priv_const_id
+      left join pt_privconst priv on priv.priv_const_id = report.priv_const_id
       left join pt_user user on priv.user_id  = user.user_id
 
       WHERE priv.const_id =#{constId} and priv.company_id = #{companyId}

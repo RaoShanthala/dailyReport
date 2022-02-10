@@ -34,7 +34,7 @@
 	  report.deleted, report.created_at, report.updated_at,
       priv.priv_const_name, priv.user_id, user.sei, user.mei,const.const_id, const.const_name
       FROM pt_report report
-      left join pt_privConst priv on priv.priv_const_id = report.priv_const_id
+      left join pt_privconst priv on priv.priv_const_id = report.priv_const_id
       left join pt_user user on priv.user_id  = user.user_id
       left join pt_construction const on priv.const_id = const.const_id
 
